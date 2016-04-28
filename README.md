@@ -4,7 +4,11 @@
 
 Setup an infrastructure to harvest and backup bird migration altitude profile data, and offer some data products for easier consumption of that data by users (researchers and applications).
 
-## Work packages & requirements
+## Schema
+
+[![schema](https://rawgit.com/enram/infrastructure/master/schema.svg)](schema.svg)
+
+## Work packages
 
 1. Periodically download data from BALTRAD server
 2. Store data in a file repository
