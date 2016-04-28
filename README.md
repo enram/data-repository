@@ -25,3 +25,5 @@ Setup an infrastructure to harvest and backup bird migration altitude profile da
 ### 9. Offer a webservice for aggregated data
 
 ### 10. Setup machines to host the infrastructure
+
+### 11. Develop a web application that shows data availability
