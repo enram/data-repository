@@ -14,16 +14,18 @@ Setup an infrastructure to harvest and backup bird migration altitude profile da
 
 ### 4. Extract and store radar metadata
 
-### 5. Offer combined data products
+### 5. Extract and store settings data
 
-### 6. Offer aggregated data products
+### 6. Offer combined data products
 
-### 7. Offer a webservice for radar metadata
+### 7. Offer aggregated data products
 
-### 8. Offer a webservice for data availability
+### 8. Offer a webservice for radar metadata + settings
 
-### 9. Offer a webservice for aggregated data
+### 9. Offer a webservice for data availability
 
-### 10. Setup machines to host the infrastructure
+### 10. Offer a webservice for aggregated data
 
-### 11. Develop a web application that shows data availability
+### 11. Setup machines to host the infrastructure
+
+### 12. Develop a web application that shows data availability
