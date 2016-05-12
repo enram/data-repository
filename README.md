@@ -12,7 +12,6 @@ Setup an infrastructure to harvest and backup bird migration altitude profile da
 
 1. Periodically download data from BALTRAD server
 2. Store data in a file repository
-3. Transform data to CSV
 4. Extract and store radar metadata
 5. Extract and store settings data
 6. Offer combined data products
