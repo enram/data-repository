@@ -4,11 +4,11 @@ import requests
 
 class GithubConnector():
 
-    def __init__(self, repo_username=None, repo_name=None, paths=None, scratch_folder=None):
+    def __init__(self, repo_username=None, repo_name=None, paths=None, local_folder=None):
         self.repo_username = repo_username
         self.repo_name = repo_name
         self.paths = paths
-        self.scratch = scratch_folder
+        self.folder = local_folder
 
     def _parse_files_from_response(self, response):
         response_data = response.json()
@@ -31,6 +31,6 @@ class GithubConnector():
         for link in self.list_files():
             name = path.split(link)[-1]
             response = requests.get(link)
-            with open(path.join(self.scratch, name), 'wb+') as w:
+            with open(path.join(self.folder, name), 'wb+') as w:
                 w.write(response.content)
 
