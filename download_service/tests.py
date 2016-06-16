@@ -1,0 +1,34 @@
+from .helper_functions import *
+from .ext_service import *
+
+# ==============================
+# Test helper functions
+# ==============================
+
+def test_parse_filename():
+    example_names = [
+        'bezav_pvol_20151009T0000Z.h5',
+        'ukjer_pvol_20151010T0000Z.h5',
+        'dkste_vp_20151010T0000Z.h5'
+    ]
+    results = [
+        {'radar_name': 'bezav', 'data_type': 'pvol', 'date_time': '20151009T0000Z'},
+        {'radar_name': 'ukjer', 'data_type': 'pvol', 'date_time': '20151010T0000Z'},
+        {'radar_name': 'dkste', 'data_type': 'vp', 'date_time': '20151010T0000Z'},
+    ]
+    for i, name in enumerate(example_names):
+        expected_result = results[i]
+        result = parse_filename(name)
+        for key in ['radar_name', 'data_type', 'date_time']:
+            assert result[key] == expected_result[key]
+
+
+
+# ==============================
+# Test connectors with external services
+# ==============================
+
+def test_list_files_from_github():
+    gc = GithubConnector(repo_username='adokter', repo_name='ODIM-hdf5-test', paths=['vp'])
+    for f in gc.list_files():
+        print(f)
