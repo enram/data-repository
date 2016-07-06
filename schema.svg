@@ -502,15 +502,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="506.98532"
-     inkscape:cy="238.27631"
+     inkscape:cx="380.21118"
+     inkscape:cy="239.99286"
      inkscape:document-units="px"
-     inkscape:current-layer="g5357"
+     inkscape:current-layer="g3837-6-8"
      showgrid="false"
      inkscape:window-width="1863"
      inkscape:window-height="1155"
-     inkscape:window-x="195"
-     inkscape:window-y="17"
+     inkscape:window-x="61"
+     inkscape:window-y="16"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -639,19 +639,22 @@
            id="path5280-9-79"
            d="m 189.66552,515.18615 0.24518,147.25271"
            style="fill:none;stroke:#000000;stroke-width:1.49999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow2Lend)" />
-        <flowRoot
-           transform="translate(-115.26301,509.81649)"
+        <text
+           xml:space="preserve"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-           id="flowRoot4573"
-           xml:space="preserve"><flowRegion
-             id="flowRegion4575"><rect
-               y="77.20536"
-               x="312.14285"
-               height="26.969532"
-               width="102.76795"
-               id="rect4577" /></flowRegion><flowPara
-             id="flowPara4722"
-             style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana">download</flowPara></flowRoot>        <g
+           x="196.89323"
+           y="607.71625"
+           id="text3144"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="196.89323"
+             y="607.71625"
+             id="tspan3146"><tspan
+               x="196.89323"
+               y="607.71625"
+               style="font-size:20px;font-variant:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana"
+               id="tspan3148">download</tspan></tspan></text>
+        <g
            id="g5676-5-7"
            transform="translate(-44.824126,-155.8855)">
           <rect
@@ -791,31 +794,37 @@
            id="path5280-9-79-9-4"
            d="m 690.66031,689.68215 195.99716,-0.24518"
            style="fill:none;stroke:#000000;stroke-width:1.49999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow2Lend)" />
-        <flowRoot
-           transform="translate(38.451761,577.74204)"
+        <text
+           xml:space="preserve"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-           id="flowRoot4573-2"
-           xml:space="preserve"><flowRegion
-             id="flowRegion4575-3"><rect
-               y="77.20536"
-               x="312.14285"
-               height="28.571421"
-               width="91.428596"
-               id="rect4577-3" /></flowRegion><flowPara
-             id="flowPara4722-7"
-             style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana">process</flowPara></flowRoot>        <flowRoot
-           transform="translate(438.45176,577.74204)"
+           x="350.608"
+           y="675.64178"
+           id="text3150"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="350.608"
+             y="675.64178"
+             id="tspan3152"><tspan
+               x="350.608"
+               y="675.64178"
+               style="font-size:20px;font-variant:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana"
+               id="tspan3154">process</tspan></tspan></text>
+        <text
+           xml:space="preserve"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-           id="flowRoot4573-2-2"
-           xml:space="preserve"><flowRegion
-             id="flowRegion4575-3-7"><rect
-               y="77.20536"
-               x="312.14285"
-               height="28.571421"
-               width="91.428596"
-               id="rect4577-3-7" /></flowRegion><flowPara
-             id="flowPara4722-7-5"
-             style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana">process</flowPara></flowRoot>      </g>
+           x="750.60803"
+           y="675.64178"
+           id="text3156"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="750.60803"
+             y="675.64178"
+             id="tspan3158"><tspan
+               x="750.60803"
+               y="675.64178"
+               style="font-size:20px;font-variant:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana"
+               id="tspan3160">process</tspan></tspan></text>
+      </g>
       <g
          id="g5309">
         <g
@@ -833,17 +842,17 @@
              sodipodi:linespacing="125%"
              id="text6941"
              y="651.57996"
-             x="151.99518"
+             x="144.78815"
              style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
              xml:space="preserve"><tspan
                id="tspan6943"
                y="651.57996"
-               x="151.99518"
+               x="144.78815"
                sodipodi:role="line"><tspan
                  id="tspan6945"
                  style="font-size:20px;font-variant:normal;font-stretch:normal;font-family:Verdana;-inkscape-font-specification:Verdana"
                  y="651.57996"
-                 x="151.99518">file viewer</tspan></tspan></text>
+                 x="144.78815">file browser</tspan></tspan></text>
         </g>
         <path
            sodipodi:nodetypes="cc"
