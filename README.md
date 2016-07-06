@@ -10,14 +10,15 @@ Setup an infrastructure to harvest and backup bird migration altitude profile da
 
 ## Work packages
 
-1. Periodically download data from BALTRAD server
-2. Store data in a file repository
-4. Extract and store radar metadata
-5. Extract and store settings data
-6. Offer combined data products
-7. Offer aggregated data products
-8. Offer a webservice for radar metadata & settings
-9. Offer a webservice for data availability
-10. Offer a webservice for aggregated data
-11. Setup machines to host the infrastructure
-12. Develop a web application that shows data availability
+1. Setup data repository for hdf5 files on S3
+2. Download hdf5 files from BALTRAD server (daily, with 2-day delay)
+3. Provide access to data repository via file browser
+4. Setup database for data and metadata
+5. Process **all** hdf5 files and populate database from scratch (can be repeated)
+6. Process **new** hdf5 files and add new data and metadata (daily)
+7. Allow access to database via R
+8. Allow access to database via PgAdmin (optional)
+9. Create derived data for coverage app
+10. Develop coverage app
+11. Create derived data for flow visualization
+12. Adapt flow visualization to work with new data
