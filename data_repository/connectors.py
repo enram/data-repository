@@ -1,5 +1,8 @@
-import boto3
+
 import os
+from ftplib import FTP
+
+import boto3
 import requests
 
 
@@ -9,17 +12,6 @@ class Connector():
 
     def list_files(self, paths):
         raise 'Not implemented'
-
-    def download_all_files(self, paths, local_folder):
-        """
-        download all files in the given paths from the remote source
-        :param paths: a list of paths on the remote source from which files should be downloaded
-        :param local_folder: a local folder to download the files to
-        :return: nothing
-        """
-        self.folder = local_folder
-        for f in self.list_files(paths):
-            self.download_file(f)
 
 
 class GithubConnector(Connector):
@@ -37,7 +29,8 @@ class GithubConnector(Connector):
     def _parse_files_from_response(self, response):
         """
         Parses the download_urls from the response and yields them one by one
-        :param response: a JSON response from the Github API that lists files in a given directory
+        :param response: a JSON response from the Github API that lists files
+        in a given directory
         """
         response_data = response.json()
         for item in response_data:
@@ -95,7 +88,8 @@ class S3Connector(Connector):
         :param file: dict containing information about the file to be downloaded
         :return: nothing
         """
-        response = self.s3client.get_object(Bucket=self.bucket_name, Key=file['key'])
+        response = self.s3client.get_object(Bucket=self.bucket_name,
+                                            Key=file['key'])
         full_name = os.path.join(self.folder, file['key'])
         os.makedirs(os.path.dirname(full_name), exist_ok=True)
         with open(full_name, 'wb') as w:
@@ -130,10 +124,62 @@ class S3Connector(Connector):
         """
         for path in paths:
             if startAfter:
-                response = self.s3client.list_objects_v2(Bucket=self.bucket_name, StartAfter=startAfter, Prefix=path)
+                response = self. ,
+                                                         StartAfter=startAfter,
+                                                         Prefix=path)
             else:
-                response = self.s3client.list_objects_v2(Bucket=self.bucket_name, Prefix=path)
+                response = self.s3client.list_objects_v2(Bucket=self.bucket_name,
+                                                         Prefix=path)
             for item in response['Contents']:
                 if item['Key'][-1] != '/':
                     # don't include directories themselves
                     yield {'key': item['Key']}
+
+
+class BaltradFTPConnector(Connector):
+
+    _ftp_connection = None
+
+    def __init__(self, ftp_url=None, ftp_username=None,
+                 ftp_pwd=None, subfolder='data'):
+        """
+        Initialize a GithubConnector
+
+        :param repo_username: username of the repository owner
+        :param repo_name: name of the repository
+        """
+        self._ftp_url = ftp_url
+        self._ftp_username = ftp_username
+        self._ftp_pwd = ftp_pwd
+
+        self._connect_to_ftp(self._ftp_url, self._ftp_username,
+                             self._ftp_pwd, subfolder)
+
+    def _connect_to_ftp(self, url, login, pwd, subfolder):
+        """
+        Private method to connect to the S3 service
+        """
+        self._ftp = FTP(host=url, user=login, passwd=pwd)
+        self._ftp.cwd(subfolder)
+
+    def __del__(self):
+        self._ftp.quit()
+
+    def download_file(self, filename):
+        """download a single file
+
+        :param filename:
+        :return:
+        """
+        with open(filename, 'wb') as f:
+            self._ftp.retrbinary('RETR ' + filename, f.write)
+
+    def list_files(self, namematch="_vp_"):
+        """
+        Returns an iterator that allows you to iterate over all files
+        (i.e. the filename of each file) in the given paths.
+
+        """
+        for fname in self._ftp.nlst():
+            if namematch in fname:
+                yield fname
