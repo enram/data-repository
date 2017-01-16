@@ -124,7 +124,7 @@ class S3Connector(Connector):
         """
         for path in paths:
             if startAfter:
-                response = self. ,
+                response = self.s3client.list_objects_v2(Bucket=self.bucket_name,
                                                          StartAfter=startAfter,
                                                          Prefix=path)
             else:
