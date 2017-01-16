@@ -26,5 +26,5 @@ This procedure describes how bird profile data should be transferred from the BA
                     └── month
                         └── day
                             └── hour
-                                └── filename: dkrom_20170114231500.h5
+                                └── filename: dkrom_vp_20170114231500.h5
 
