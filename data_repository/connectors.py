@@ -1,5 +1,6 @@
 
 import os
+from datetime import datetime
 from glob import glob
 from ftplib import FTP
 
@@ -277,11 +278,24 @@ class Porter:
             if verbose:
                 print("{} is not transferred to S3 bucket".format(filename))
 
-    def report(self):
+    def report(self, reset_file=False, transfertype="Baltrad to S3"):
         """report about the transferred and stalled files"""
-
-        return None
-
+        if reset_file:
+            file_handler = "w"
+        else:
+            file_handler = "a"
+        with open('./logtest', file_handler) as outfile:
+            outfile.write("-" * 55 + "\n")
+            outfile.write("Data transfer at {} from {}:\n".format(
+                datetime.now().strftime("%Y-%m-%d %H:%M"), transfertype))
+            outfile.write("-" * 55 + "\n")
+            outfile.write("\n")
+            outfile.write("Files not transferred:\n")
+            outfile.write("\n".join(self.stalled))
+            outfile.write("\n\n")
+            outfile.write("Files succesfully transferred:\n")
+            outfile.write("\n".join(self.transferred))
+            outfile.write("\n\n\n")
 
 class BaltradToS3(Porter):
 
