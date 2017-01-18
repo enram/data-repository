@@ -183,3 +183,122 @@ class BaltradFTPConnector(Connector):
         for fname in self._ftp.nlst():
             if namematch in fname:
                 yield fname
+
+
+class Porter:
+
+    def __init__(self):
+        """"""
+        self.transferred = []
+        self.stalled = []
+
+    def transfer(self):
+        raise 'Not implemented'
+
+    def log_transfer(self, succes, filename, verbose=True):
+        """store the filename in stalled or transferred report list"""
+        if succes:
+            self.transferred.append(filename)
+            if verbose:
+                print("{} is succesfully transferred "
+                      "to S3 bucket".format(filename))
+        else:
+            self.stalled.append(filename)
+            if verbose:
+                print("{} is not transferred to S3 bucket".format(filename))
+
+    def report(self):
+        """report about the transferred and stalled files"""
+
+        return None
+
+
+class BaltradToS3(Porter):
+
+    def __init__(self, ftp_URL, ftp_LOGIN, ftp_PASSWORD, bucketname):
+        """Tunnel Baltrad server to S3
+
+        :param ftp_URL:
+        :param ftp_LOGIN:
+        :param ftp_PASSWORD:
+        :param bucketname:
+        """
+        Porter.__init__(self)
+        self.ftp = BaltradFTPConnector(ftp_URL, ftp_LOGIN, ftp_PASSWORD)
+        self.s3 = S3Connector(bucketname)
+
+    def transfer(self, name_match="_vp_", overwrite=False,
+                 limit=None, verbose=False):
+        """transfer all current baltrad files to s3 with the given name_match
+        included
+
+        :param name_match:
+        :param overwrite:
+        :param limit:
+        :param verbose:
+        :return:
+        """
+
+        for j, filename in enumerate(self.ftp.list_files(
+                namematch=name_match)):
+
+            # get the files from ftp:
+            with open(filename, 'bw') as f:
+                self.ftp._ftp.retrbinary('RETR ' + filename, f.write)
+
+                upload_succes = self.s3.upload_file_enram(filename,
+                                                          overwrite=overwrite)
+                self.log_transfer(upload_succes, filename, verbose)
+
+            if isinstance(limit, int) and j >= limit-1:
+                break
+
+
+class LocalToS3(Porter):
+
+    def __init__(self, bucketname, filepath):
+        """Tunnel Baltrad server to S3
+
+        :param bucketname:
+        :param filepath:
+        """
+        Porter.__init__(self)
+        self.s3 = S3Connector(bucketname)
+        self.filepath = filepath
+
+    def list_local_files(self, name_match="_vp_", paths=False):
+        """iterate over all bucket files
+
+        :param name_match:
+        :param paths:
+        :return:
+        """
+
+        for path in glob(os.path.join(self.filepath, "**", "*.h5"),
+                         recursive=True):
+            if name_match in path:
+                if paths:
+                    yield path
+                else:
+                    yield os.path.split(path)[-1]
+
+    def transfer(self, name_match="_vp_", overwrite=False,
+                 limit=None, verbose=False):
+        """transfer all profiles in folder to s3
+
+        :param name_match:
+        :param overwrite:
+        :param limit:
+        :param verbose:
+        :return:
+        """
+        for j, filepath in enumerate(
+                self.list_local_files(name_match, paths=True)):
+
+            upload_succes = self.s3.upload_file_enram(filepath,
+                                                      overwrite=overwrite)
+            self.log_transfer(upload_succes, os.path.split(filepath)[-1],
+                              verbose)
+
+            if isinstance(limit, int) and j >= limit-1:
+                break
