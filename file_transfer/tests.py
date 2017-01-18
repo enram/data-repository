@@ -12,9 +12,9 @@ def test_parse_filename():
         'dkste_vp_20151010T0000Z.h5'
     ]
     results = [
-        {'radar_name': 'bezav', 'data_type': 'pvol', 'date_time': '20151009T0000Z'},
-        {'radar_name': 'ukjer', 'data_type': 'pvol', 'date_time': '20151010T0000Z'},
-        {'radar_name': 'dkste', 'data_type': 'vp', 'date_time': '20151010T0000Z'},
+        {'radar_name': 'bezav', 'data_type': 'pvol', 'date_time': '201510090000'},
+        {'radar_name': 'ukjer', 'data_type': 'pvol', 'date_time': '201510100000'},
+        {'radar_name': 'dkste', 'data_type': 'vp', 'date_time': '201510100000'},
     ]
     for i, name in enumerate(example_names):
         expected_result = results[i]
@@ -34,6 +34,8 @@ def test_list_files_from_github():
     by the GithubConnector so you can manually check this.
     :return:
     """
-    gc = GithubConnector(repo_username='adokter', repo_name='ODIM-hdf5-test', paths=['vp'])
+    gc = GithubConnector(repo_username='adokter',
+                         repo_name='ODIM-hdf5-test',
+                         paths=['vp'])
     for f in gc.list_files():
         print(f)

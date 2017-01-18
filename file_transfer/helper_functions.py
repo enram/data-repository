@@ -1,19 +1,30 @@
-from os import path
+
+import re
+
 
 def parse_filename(name):
     """
     parse a BALTRAD file name and return relevant information.
 
-    :param name: the file name to be parsed. Eventual path and extension will be removed.
-    :type name: string
+    :param name: string the file name to be parsed. Eventual path and
+    extension will be removed.
     :rtype: dict containing relevant information from the file name
     """
-    basename = path.split(name)[-1]
-    basename_txt = path.splitext(basename)[0]
-    parts = basename_txt.split('_')
-    return {
-        'radar_name': parts[0],
-        'data_type': parts[1],
-        'date_time': parts[2]
-    }
+
+    name_regex = re.compile(
+        r'([^_]*)_([^_]*)_(\d\d\d\d)(\d\d)(\d\d)T?(\d\d)(\d\d)(?:Z|00)?.*\.h5')
+
+    match = re.match(name_regex, name)
+    if match:
+        country_radar, data_type, year, \
+            month, day, hour, minute = match.groups()
+        return {'country': country_radar[:2],
+                'radar': country_radar[2:],
+                'data_type': data_type,
+                'year': year,
+                'month': month,
+                'day': day,
+                'hour': hour}
+    else:
+        return None
 

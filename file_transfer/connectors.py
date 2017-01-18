@@ -1,25 +1,22 @@
-import boto3
+
 import os
+from datetime import datetime
+from glob import glob
+from ftplib import FTP
+
+import boto3
+import botocore
 import requests
 
+from helper_functions import parse_filename
 
-class Connector():
+
+class Connector:
     def download_file(self, file):
         raise 'Not implemented'
 
     def list_files(self, paths):
         raise 'Not implemented'
-
-    def download_all_files(self, paths, local_folder):
-        """
-        download all files in the given paths from the remote source
-        :param paths: a list of paths on the remote source from which files should be downloaded
-        :param local_folder: a local folder to download the files to
-        :return: nothing
-        """
-        self.folder = local_folder
-        for f in self.list_files(paths):
-            self.download_file(f)
 
 
 class GithubConnector(Connector):
@@ -34,10 +31,12 @@ class GithubConnector(Connector):
         self.repo_username = repo_username
         self.repo_name = repo_name
 
-    def _parse_files_from_response(self, response):
+    @staticmethod
+    def _parse_files_from_response(response):
         """
         Parses the download_urls from the response and yields them one by one
-        :param response: a JSON response from the Github API that lists files in a given directory
+        :param response: a JSON response from the Github API that lists files
+        in a given directory
         """
         response_data = response.json()
         for item in response_data:
@@ -57,8 +56,8 @@ class GithubConnector(Connector):
 
     def list_files(self, paths):
         """
-        Returns an iterator that allows you to iterate over all files (i.e. the download link
-        of each file) in the given paths.
+        Returns an iterator that allows you to iterate over all files (i.e.
+        the download link of each file) in the given paths.
         :param paths: a list of paths on the remote location to list files from
         """
         for p in paths:
@@ -82,12 +81,18 @@ class S3Connector(Connector):
         """
         self.bucket_name = bucket_name
         self._connect_to_s3()
+        self.bucket = self._s3resource.Bucket(bucket_name)
 
     def _connect_to_s3(self):
         """
         Private method to connect to the S3 service
         """
-        self.s3client = boto3.client('s3')
+
+        # Create the resource
+        self._s3resource = boto3.resource('s3')
+
+        # Get the S3 client from the resource
+        self.s3client = self._s3resource.meta.client
 
     def download_file(self, file):
         """
@@ -95,7 +100,8 @@ class S3Connector(Connector):
         :param file: dict containing information about the file to be downloaded
         :return: nothing
         """
-        response = self.s3client.get_object(Bucket=self.bucket_name, Key=file['key'])
+        response = self.s3client.get_object(Bucket=self.bucket_name,
+                                            Key=file['key'])
         full_name = os.path.join(self.folder, file['key'])
         os.makedirs(os.path.dirname(full_name), exist_ok=True)
         with open(full_name, 'wb') as w:
@@ -105,35 +111,278 @@ class S3Connector(Connector):
         """
         Upload a file to the bucket
         :param filename: name of the file on the local system
-        :param object_key: name of the file to be used in the bucket (note that subdirectories on S3 should be part of
-        the object key)
+        :param object_key: name of the file to be used in the bucket (note
+        that subdirectories on S3 should be part of the object key)
         """
         data = open(filename, 'rb').read()
-        self.s3client.put_object(Body=data, Bucket=self.bucket_name, Key=object_key)
+        self.s3client.put_object(Body=data,
+                                 Bucket=self.bucket_name,
+                                 Key=object_key)
 
-    def upload_files(self, files, names):
+    def upload_file_enram(self, filepath, overwrite=False):
         """
-        Upload multiple files to the bucket
-        :param files: list containing names of files on the local system
-        :param names: list containing object keys for the files in the bucket
-        """
-        for file_name, name in zip(files, names):
-            self.upload_file(file_name, name)
 
-    def list_files(self, paths, startAfter=None):
+        :param filepath:
+        :param overwrite:
+        :return:
         """
-        List all files in the bucket. Note that boto3 limits the output of this function. Check the 'IsTruncated'
-        attribute in the response.
-        :param startAfter: tell S3 to start listing object keys starting from this key. This way you can continue
-        listing files if the output of a previous call was truncated.
-        :return: Dictonary parsed from the response. Files are in the 'Contents' attribute.
+
+        with open(filepath, 'br') as f:
+            filename = os.path.split(filepath)[-1]
+            file_info = parse_filename(filename)
+            object_location = "/".join([file_info['country'],
+                                        file_info['radar'],
+                                        file_info['year'],
+                                        file_info['month'],
+                                        file_info['day'],
+                                        file_info['hour'],
+                                        filename])
+
+            if (not overwrite) and self.key_exists(object_location):
+                return False
+            else:
+                self.s3client.put_object(Body=f,
+                                         Bucket=self.bucket_name,
+                                         Key=object_location)
+                return True
+
+    @staticmethod
+    def _strchecklister(input2check):
+        """string to list converter
+
+        check if input is a string and make a one element list from string
         """
+        if isinstance(input2check, str):
+            return [input2check]
+        else:
+            return input2check
+
+    def list_files(self):
+        """iterate over all bucjet files"""
+        for key in self.bucket.objects.all():
+            yield key.key.split("/")[-1]
+
+    def list_files_path(self, paths, startAfter=None):
+        """
+        List all files in the bucket. Note that boto3 limits the output of
+        this function. Check the 'IsTruncated' attribute in the response.
+        :param startAfter: tell S3 to start listing object keys starting from
+        this key. This way you can continue listing files if the output of a
+        previous call was truncated.
+        :return: Dictonary parsed from the response. Files are in the
+        'Contents' attribute.
+        """
+
+        paths = self._strchecklister(paths)
+
         for path in paths:
             if startAfter:
-                response = self.s3client.list_objects_v2(Bucket=self.bucket_name, StartAfter=startAfter, Prefix=path)
+                response = self.s3client.list_objects_v2(Bucket=self.bucket_name,
+                                                         StartAfter=startAfter,
+                                                         Prefix=path)
             else:
-                response = self.s3client.list_objects_v2(Bucket=self.bucket_name, Prefix=path)
+                response = self.s3client.list_objects_v2(Bucket=self.bucket_name,
+                                                         Prefix=path)
+            if response["IsTruncated"]:
+                print("Item enlisting is truncated!")
+
             for item in response['Contents']:
                 if item['Key'][-1] != '/':
                     # don't include directories themselves
                     yield {'key': item['Key']}
+
+    def key_exists(self, file_key):
+        """check if key is already inside a bucket, rel to path"""
+
+        exists = False
+        try:
+            self._s3resource.Object(self.bucket_name, file_key).load()
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == "404":
+                exists = False
+            else:
+                raise
+        else:
+            exists = True
+        return exists
+
+
+class BaltradFTPConnector(Connector):
+
+    _ftp_connection = None
+
+    def __init__(self, ftp_url=None, ftp_username=None,
+                 ftp_pwd=None, subfolder='data'):
+        """
+        Initialize a GithubConnector
+
+        :param repo_username: username of the repository owner
+        :param repo_name: name of the repository
+        """
+        self._ftp_url = ftp_url
+        self._ftp_username = ftp_username
+        self._ftp_pwd = ftp_pwd
+
+        self._connect_to_ftp(self._ftp_url, self._ftp_username,
+                             self._ftp_pwd, subfolder)
+
+    def _connect_to_ftp(self, url, login, pwd, subfolder):
+        """
+        Private method to connect to the S3 service
+        """
+        self._ftp = FTP(host=url, user=login, passwd=pwd)
+        self._ftp.cwd(subfolder)
+
+    def __del__(self):
+        self._ftp.quit()
+
+    def download_file(self, filename):
+        """download a single file
+
+        :param filename:
+        :return:
+        """
+        with open(filename, 'wb') as f:
+            self._ftp.retrbinary('RETR ' + filename, f.write)
+
+    def list_files(self, namematch="_vp_"):
+        """
+        Returns an iterator that allows you to iterate over all files
+        (i.e. the filename of each file) in the given paths.
+
+        """
+        for fname in self._ftp.nlst():
+            if namematch in fname:
+                yield fname
+
+
+class Porter:
+
+    def __init__(self):
+        """"""
+        self.transferred = []
+        self.stalled = []
+
+    def transfer(self):
+        raise 'Not implemented'
+
+    def log_transfer(self, succes, filename, verbose=True):
+        """store the filename in stalled or transferred report list"""
+        if succes:
+            self.transferred.append(filename)
+            if verbose:
+                print("{} is succesfully transferred "
+                      "to S3 bucket".format(filename))
+        else:
+            self.stalled.append(filename)
+            if verbose:
+                print("{} is not transferred to S3 bucket".format(filename))
+
+    def report(self, reset_file=False, transfertype="Baltrad to S3"):
+        """report about the transferred and stalled files"""
+        if reset_file:
+            file_handler = "w"
+        else:
+            file_handler = "a"
+        with open('./logtest', file_handler) as outfile:
+            outfile.write("-" * 55 + "\n")
+            outfile.write("Data transfer at {} from {}:\n".format(
+                datetime.now().strftime("%Y-%m-%d %H:%M"), transfertype))
+            outfile.write("-" * 55 + "\n")
+            outfile.write("\n")
+            outfile.write("Files not transferred:\n")
+            outfile.write("\n".join(self.stalled))
+            outfile.write("\n\n")
+            outfile.write("Files succesfully transferred:\n")
+            outfile.write("\n".join(self.transferred))
+            outfile.write("\n\n\n")
+
+class BaltradToS3(Porter):
+
+    def __init__(self, ftp_URL, ftp_LOGIN, ftp_PASSWORD, bucketname):
+        """Tunnel Baltrad server to S3
+
+        :param ftp_URL:
+        :param ftp_LOGIN:
+        :param ftp_PASSWORD:
+        :param bucketname:
+        """
+        Porter.__init__(self)
+        self.ftp = BaltradFTPConnector(ftp_URL, ftp_LOGIN, ftp_PASSWORD)
+        self.s3 = S3Connector(bucketname)
+
+    def transfer(self, name_match="_vp_", overwrite=False,
+                 limit=None, verbose=False):
+        """transfer all current baltrad files to s3 with the given name_match
+        included
+
+        :param name_match:
+        :param overwrite:
+        :param limit:
+        :param verbose:
+        :return:
+        """
+
+        for j, filename in enumerate(self.ftp.list_files(
+                namematch=name_match)):
+
+            # get the files from ftp:
+            with open(filename, 'bw') as f:
+                self.ftp._ftp.retrbinary('RETR ' + filename, f.write)
+
+                upload_succes = self.s3.upload_file_enram(filename,
+                                                          overwrite=overwrite)
+                self.log_transfer(upload_succes, filename, verbose)
+
+            if isinstance(limit, int) and j >= limit-1:
+                break
+
+
+class LocalToS3(Porter):
+
+    def __init__(self, bucketname, filepath):
+        """Tunnel Baltrad server to S3
+
+        :param bucketname:
+        :param filepath:
+        """
+        Porter.__init__(self)
+        self.s3 = S3Connector(bucketname)
+        self.filepath = filepath
+
+    def list_local_files(self, name_match="_vp_", paths=False):
+        """iterate over all bucket files
+
+        :param name_match:
+        :param paths:
+        :return:
+        """
+
+        for path in glob(os.path.join(self.filepath, "**", "*.h5"),
+                         recursive=True):
+            if name_match in path:
+                if paths:
+                    yield path
+                else:
+                    yield os.path.split(path)[-1]
+
+    def transfer(self, name_match="_vp_", overwrite=False,
+                 limit=None, verbose=False):
+        """transfer all profiles in folder to s3
+
+        :param name_match:
+        :param overwrite:
+        :param limit:
+        :param verbose:
+        :return:
+        """
+        for j, filepath in enumerate(
+                self.list_local_files(name_match, paths=True)):
+
+            upload_succes = self.s3.upload_file_enram(filepath,
+                                                      overwrite=overwrite)
+            self.log_transfer(upload_succes, os.path.split(filepath)[-1],
+                              verbose)
+
+            if isinstance(limit, int) and j >= limit-1:
+                break

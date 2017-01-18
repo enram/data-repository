@@ -62,3 +62,9 @@ docs/_build/
 # hdf5 testing
 hdf5_handling/h5_data/
 hdf5_handling/temp_*
+
+# credentials
+creds*
+
+# pycharm shizzle
+.idea
