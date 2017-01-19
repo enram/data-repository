@@ -49,7 +49,7 @@ class GithubConnector(Connector):
 
     def download_file(self, file):
         response = requests.get(file['download_url'])
-        full_name = os.path.join(self.folder, file['path'])
+        full_name = file['path']
         os.makedirs(os.path.dirname(full_name), exist_ok=True)
         with open(full_name, 'wb') as w:
             w.write(response.content)
@@ -101,8 +101,8 @@ class S3Connector(Connector):
         :return: nothing
         """
         response = self.s3client.get_object(Bucket=self.bucket_name,
-                                            Key=file['key'])
-        full_name = os.path.join(self.folder, file['key'])
+                                            Key=file)
+        full_name = file
         os.makedirs(os.path.dirname(full_name), exist_ok=True)
         with open(full_name, 'wb') as w:
             w.write(response['Body'].read())
