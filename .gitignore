@@ -70,4 +70,4 @@ creds*
 .idea
 
 # markdown
-.html
+*.html
