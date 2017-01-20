@@ -2,6 +2,8 @@
 import re
 import csv
 
+from collections import Counter
+
 
 def parse_filename(name):
     """
@@ -29,6 +31,31 @@ def parse_filename(name):
                 'minute': minute}
     else:
         return None
+
+
+def extract_month_updates(keylist):
+    """loop through all keys and get the """
+    file_count = Counter()
+
+    for name in keylist:
+        file_info = parse_filename(name)
+        if file_info:
+            country_radar = "{}{}".format(file_info["country"],
+                                          file_info["radar"])
+            date = "-".join([file_info["year"], file_info["month"]])
+            file_count[" ".join([country_radar, date])] += 1
+    return file_count
+
+
+def parse_coverage_month(name):
+    """utility to parse a monthly coverage key output"""
+
+    name_regex = re.compile(
+        r'([^_]{2})([^_]{3}) (\d\d\d\d)-(\d\d)')
+    match = re.match(name_regex, name)
+    country, radar, year, month = match.groups()
+
+    return country, radar, year, month
 
 
 def coverage_to_csv(coverage_count, filename='coverage.csv'):
