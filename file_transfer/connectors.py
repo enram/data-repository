@@ -163,34 +163,24 @@ class S3Connector(Connector):
         for key in self.bucket.objects.all():
             yield key.key.split("/")[-1]
 
-    def list_files_path(self, paths, startAfter=None):
+    def list_files_path(self, paths):
         """
-        List all files in the bucket. Note that boto3 limits the output of
-        this function. Check the 'IsTruncated' attribute in the response.
-        :param startAfter: tell S3 to start listing object keys starting from
-        this key. This way you can continue listing files if the output of a
-        previous call was truncated.
-        :return: Dictonary parsed from the response. Files are in the
-        'Contents' attribute.
+        List all files in the bucket.
         """
 
         paths = self._strchecklister(paths)
 
         for path in paths:
-            if startAfter:
-                response = self.s3client.list_objects_v2(Bucket=self.bucket_name,
-                                                         StartAfter=startAfter,
-                                                         Prefix=path)
-            else:
-                response = self.s3client.list_objects_v2(Bucket=self.bucket_name,
-                                                         Prefix=path)
-            if response["IsTruncated"]:
-                print("Item enlisting is truncated!")
-
-            for item in response['Contents']:
-                if item['Key'][-1] != '/':
-                    # don't include directories themselves
-                    yield {'key': item['Key']}
+            paginator = self.s3client.get_paginator('list_objects_v2')
+            operation_parameters = {'Bucket': self.bucket_name,
+                                    'Prefix': path
+                                    }
+            page_iterator = paginator.paginate(**operation_parameters)
+            for page in page_iterator:
+                for item in page['Contents']:
+                    if item['Key'][-1] != '/':
+                        # don't include directories themselves
+                        yield item['Key']
 
     def key_exists(self, file_key):
         """check if key is already inside a bucket, rel to path"""
@@ -207,18 +197,29 @@ class S3Connector(Connector):
             exists = True
         return exists
 
-    def count_enram_coverage(self):
+    def count_enram_coverage(self, level='day'):
         """count the number of file for each day batch"""
         file_count = Counter()
 
-        for i, name in enumerate(self.list_files()):
+        for name in self.list_files():
             file_info = parse_filename(name)
-            country_radar = "{}{}".format(file_info["country"],
-                                          file_info["radar"])
-            date = "-".join(
-                [file_info["year"], file_info["month"], file_info["day"]])
+            if file_info:
+                country_radar = "{}{}".format(file_info["country"],
+                                              file_info["radar"])
+                if level == 'day':
+                    date = "-".join(
+                        [file_info["year"], file_info["month"],
+                         file_info["day"]])
+                elif level == 'month':
+                    date = "-".join([file_info["year"], file_info["month"]])
+                elif level == 'year':
+                    date = "-".join([file_info["year"]])
+                else:
+                    raise Exception('Not a valid count option, choose year,'
+                                    'month or day')
 
-            file_count[" ".join([country_radar, date])] += 1
+                file_count[" ".join([country_radar, date])] += 1
+
         return file_count
 
 
