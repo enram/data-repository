@@ -68,3 +68,6 @@ creds*
 
 # pycharm shizzle
 .idea
+
+# markdown
+.html
