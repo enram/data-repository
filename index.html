@@ -3,6 +3,8 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/calendar-heatmap.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/main.css">
         <title>ENRAM data repository for bird profiles detected by weather radars</title>
     </head>
     <body>
@@ -11,11 +13,15 @@
                 <h1>ENRAM data repository for bird profiles <small>detected by ⛅ 📡</small></h1>
                 <p>Served from <span id="bucket_link"></span></p>
             </div>
+            <div id="heatmap"></div>
             <div id="breadcrumbs"></div>
             <div id="listing"></div>
         </div>
       
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+        <script type="text/javascript" src="assets/js/calendar-heatmap.js"></script>
         <script type="text/javascript">
             var S3BL_IGNORE_PATH = true;
             // var BUCKET_NAME = 'BUCKET';
@@ -24,5 +30,6 @@
             var S3B_SORT = 'A2Z';
         </script>
         <script type="text/javascript" src="assets/js/list.js"></script>
+        <script type="text/javascript" src="assets/js/app.js"></script>
     </body>
 </html>
