@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 from glob import glob
 from ftplib import FTP
-from collections import Counter
+
 
 import boto3
 import botocore
@@ -197,31 +197,6 @@ class S3Connector(Connector):
             exists = True
         return exists
 
-    def count_enram_coverage(self, level='day'):
-        """count the number of file for each day batch"""
-        file_count = Counter()
-
-        for name in self.list_files():
-            file_info = parse_filename(name)
-            if file_info:
-                country_radar = "{}{}".format(file_info["country"],
-                                              file_info["radar"])
-                if level == 'day':
-                    date = "-".join(
-                        [file_info["year"], file_info["month"],
-                         file_info["day"]])
-                elif level == 'month':
-                    date = "-".join([file_info["year"], file_info["month"]])
-                elif level == 'year':
-                    date = "-".join([file_info["year"]])
-                else:
-                    raise Exception('Not a valid count option, choose year,'
-                                    'month or day')
-
-                file_count[" ".join([country_radar, date])] += 1
-
-        return file_count
-
 
 class BaltradFTPConnector(Connector):
 
@@ -312,6 +287,7 @@ class Porter:
             outfile.write("Files succesfully transferred:\n")
             outfile.write("\n".join(self.transferred))
             outfile.write("\n\n\n")
+
 
 class BaltradToS3(Porter):
 
