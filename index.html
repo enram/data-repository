@@ -4,8 +4,11 @@
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="assets/css/calendar-heatmap.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/main.css">
         <title>ENRAM data repository for bird profiles detected by weather radars</title>
+        <style>
+            #coverage { height: 200px; }
+            #heatmap p { margin-top: 70px }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -13,7 +16,11 @@
                 <h1>ENRAM data repository for bird profiles <small>detected by ⛅ 📡</small></h1>
                 <p>Served from <span id="bucket_link"></span></p>
             </div>
-            <div id="heatmap"></div>
+            <div id="coverage" class="well text-center">
+                <div id="heatmap">
+                    <p>Browse to a year directory to see file coverage.</p>
+                </div>
+            </div>
             <div id="breadcrumbs"></div>
             <div id="listing"></div>
         </div>
