@@ -167,15 +167,4 @@ plot(ts[1:500], ylim=c(0,3000))
 plot(ts[1:500], ylim=c(0,3000), quantity="DBZH")
 ```
 
-More functionallity of the package bioRad, such as adjusting the radial cross section and calculating migration traffic rates, can be find in its documentation.
-
-
-https://desktop.github.com/
-clone bioRad
-branch data-repo-vignettes
-add dir vignettes
-add file
-commit to branch
-publish branch
-pull request
-add reply review voor stijn en peter, let know to adriaan
+More functionallity of the package bioRad, such as adjusting the radar cross section and calculating migration traffic rates, can be find in its documentation.
