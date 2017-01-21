@@ -40,10 +40,10 @@ if (prefix.length === 3) { // We are at country/radar/year level
             // render heatmap for czbrd in 2017
             var heatmap = calendarHeatmap()
                 .data(data[countryradar][year])
-                .max("expected_vp_files") // expected vp files
+                .max(expected_vp_files) // expected vp files
                 .selector(selector)
                 .colorRange(["#ffffff", "#428bca"])
-                .tooltipEnabled("dflsmjf")
+                .tooltipEnabled(true)
                 .tooltipUnit("vp file")
                 .startDate(moment(year + "-01-01").startOf('day').toDate()); // create Jan 1st date of that year
             heatmap(); // render the chart
