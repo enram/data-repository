@@ -3,7 +3,12 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/calendar-heatmap.css">
         <title>ENRAM data repository for bird profiles detected by weather radars</title>
+        <style>
+            #coverage { height: 200px; }
+            #heatmap p { margin-top: 70px }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -11,11 +16,19 @@
                 <h1>ENRAM data repository for bird profiles <small>detected by ⛅ 📡</small></h1>
                 <p>Served from <span id="bucket_link"></span></p>
             </div>
+            <div id="coverage" class="well text-center">
+                <div id="heatmap">
+                    <p>Browse to a year directory to see file coverage.</p>
+                </div>
+            </div>
             <div id="breadcrumbs"></div>
             <div id="listing"></div>
         </div>
       
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+        <script type="text/javascript" src="assets/js/calendar-heatmap.js"></script>
         <script type="text/javascript">
             var S3BL_IGNORE_PATH = true;
             // var BUCKET_NAME = 'BUCKET';
@@ -23,6 +36,7 @@
             // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
             var S3B_SORT = 'A2Z';
         </script>
-        <script type="text/javascript" src="https://enram.github.io/s3-bucket-listing/list.js"></script>
+        <script type="text/javascript" src="assets/js/list.js"></script>
+        <script type="text/javascript" src="assets/js/app.js"></script>
     </body>
 </html>
