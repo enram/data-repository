@@ -5,13 +5,27 @@ import csv
 from collections import Counter
 
 
-def parse_filename(name):
+class EnramNameParsingError(Exception):
     """
-    parse a BALTRAD file name and return relevant information.
+    Exception placeholder for name parse issues
+    """
+    pass
+
+
+def parse_filename(name):
+    """parse enram bird profile name to individual descriptions dict
+
+    Parse a BALTRAD hdf5 file name and return relevant information as a dict,
+    collecting the individual components country, radar, data_type, year,
+    month, day, hour, minute.
+
+    File format is according to the following file format,
+    ccrrr_vp_yyyymmddhhmmss.h5 (with c the country code two-letter ids and rrr
+    the radar three-letter ids), e.g. bejab_vp_20161120235500.h5
 
     :param name: string the file name to be parsed. Eventual path and
     extension will be removed.
-    :rtype: dict containing relevant information from the file name
+    :return: dict containing relevant information from the file name
     """
 
     name_regex = re.compile(
@@ -34,7 +48,16 @@ def parse_filename(name):
 
 
 def extract_month_updates(keylist):
-    """loop through all keys and get the """
+    """count country/radar files on monthly basis in given filekey list
+
+    Loop through all keys in the given list of keys and count the number of
+    files in each country/radar/month combinations
+
+    :param keylist: list of keys according to the enram bird profile name,
+    e.g. bejab_vp_20161120235500.h5
+    :return: Counter (dict) with counts for each country/radar/month
+    combination
+    """
     file_count = Counter()
 
     for name in keylist:
@@ -48,18 +71,33 @@ def extract_month_updates(keylist):
 
 
 def parse_coverage_month(name):
-    """utility to parse a monthly coverage key output"""
+    """utility to parse a Counter with monthly coverage key output
+
+    :param name: Split a name according to the format ccrrr yyy-mm (with cc a 2
+     letter abbreviation for the country name and rrr a 3 letter abbreviation
+     of the radar name) into the respective groups
+    :return: country, radar, year, month string interpretation
+    """
 
     name_regex = re.compile(
         r'([^_]{2})([^_]{3}) (\d\d\d\d)-(\d\d)')
     match = re.match(name_regex, name)
-    country, radar, year, month = match.groups()
+    if match:
+        country, radar, year, month = match.groups()
+    else:
+        raise EnramNameParsingError
 
     return country, radar, year, month
 
 
 def coverage_to_csv(coverage_count, filename='coverage.csv'):
-    """save counter of dict into a csv file"""
+    """save counter of dict into a csv file
+
+    :param coverage_count: Counter (dict) object with the key values according
+    to the ccrrr yyy-mm format
+    :param filename: path and file name to save the coverage outcome file
+    :return:
+    """
     with open(filename, 'w') as csvfile:
         fieldnames = ['countryradar', 'date', 'vp_files']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
