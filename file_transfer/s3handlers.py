@@ -15,7 +15,15 @@ class S3Handler(S3Connector):
         S3Connector.__init__(self, bucket_name)
 
     def count_enram_coverage(self, level='day'):
-        """count the number of file for each day batch"""
+        """count the number of files for each country/radar combination
+
+        At a given time interval (day, month, year), the available number of
+        files in the S3 bucket is counted.
+
+        :param level: day | month | year
+        :return: Counter (dict), with the key representing the identifier and
+        the values the counts
+        """
         file_count = Counter()
 
         for name in self.list_files():
@@ -40,8 +48,16 @@ class S3Handler(S3Connector):
         return file_count
 
     def create_zip_version(self, keylisting):
-        """create a zip version of those folders the given keys are part of,
-        keys can be defined as a list of keys or as a counter object"""
+        """collect all keys in the listing in a combined zip folder and
+        store the zip on the appropriate s3 location
+
+        Create a zip version of those folders the given keys of the keylisting
+        are part of, keys can be defined as a list of keys or as a Counter
+        object
+
+        :param keylisting: Counter with the key/counts or a list of keys from
+        which the monthly counts will be derived
+        """
 
         if isinstance(keylisting, list):
             keylisting = extract_month_updates(keylisting)
