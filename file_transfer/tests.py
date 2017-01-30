@@ -1,4 +1,5 @@
-from .helper_functions import parse_filename
+
+from file_transfer import *
 
 # ==============================
 # Test helper functions
@@ -15,7 +16,7 @@ def test_parse_filename():
     results = [
         {'country': 'be', 'radar': 'zav', 'data_type': 'pvol', 'year': '2015',
          'month': '10', 'day': '09', 'hour': '00', 'minute': '00'},
-        {'country': 'uk', 'radar': 'jet', 'data_type': 'pvol', 'year': '2015',
+        {'country': 'uk', 'radar': 'jer', 'data_type': 'pvol', 'year': '2015',
          'month': '10', 'day': '10', 'hour': '00', 'minute': '00'},
         {'country': 'dk', 'radar': 'ste', 'data_type': 'vp', 'year': '2015',
          'month': '10', 'day': '10', 'hour': '00', 'minute': '00'},
