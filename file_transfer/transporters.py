@@ -1,9 +1,5 @@
 
 
-from connectors import (BaltradFTPConnector, S3Connector,
-                        LocalConnector)
-
-
 class Porter:
 
     def __init__(self):

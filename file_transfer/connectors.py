@@ -7,8 +7,6 @@ import boto3
 import botocore
 import requests
 
-from helper_functions import parse_filename
-
 
 class Connector:
     def download_file(self, file):
