@@ -4,7 +4,7 @@ import shutil
 from zipfile import ZipFile
 from collections import Counter
 
-from connectors import Connector, S3Connector
+from .connectors import S3Connector
 
 
 class S3EnramHandler(S3Connector):
