@@ -9,10 +9,37 @@ from helper_functions import (parse_coverage_month, parse_filename,
                               extract_month_updates)
 
 
-class S3Handler(S3Connector):
+class S3EnramHandler(S3Connector):
 
     def __init__(self, bucket_name=None):
         S3Connector.__init__(self, bucket_name)
+
+    def upload_file(self, filepath, overwrite=False):
+        """
+
+        :param filepath:
+        :param overwrite:
+        :return:
+        """
+
+        with open(filepath, 'br') as f:
+            filename = os.path.split(filepath)[-1]
+            file_info = parse_filename(filename)
+            object_location = "/".join([file_info['country'],
+                                        file_info['radar'],
+                                        file_info['year'],
+                                        file_info['month'],
+                                        file_info['day'],
+                                        file_info['hour'],
+                                        filename])
+
+            if (not overwrite) and self.key_exists(object_location):
+                return False
+            else:
+                self.s3client.put_object(Body=f,
+                                         Bucket=self.bucket_name,
+                                         Key=object_location)
+                return True
 
     def count_enram_coverage(self, level='day'):
         """count the number of files for each country/radar combination
