@@ -120,33 +120,6 @@ class S3Connector(Connector):
                                  Bucket=self.bucket_name,
                                  Key=object_key)
 
-    def upload_file_enram(self, filepath, overwrite=False):
-        """
-
-        :param filepath:
-        :param overwrite:
-        :return:
-        """
-
-        with open(filepath, 'br') as f:
-            filename = os.path.split(filepath)[-1]
-            file_info = parse_filename(filename)
-            object_location = "/".join([file_info['country'],
-                                        file_info['radar'],
-                                        file_info['year'],
-                                        file_info['month'],
-                                        file_info['day'],
-                                        file_info['hour'],
-                                        filename])
-
-            if (not overwrite) and self.key_exists(object_location):
-                return False
-            else:
-                self.s3client.put_object(Body=f,
-                                         Bucket=self.bucket_name,
-                                         Key=object_location)
-                return True
-
     @staticmethod
     def _strchecklister(input2check):
         """string to list converter
