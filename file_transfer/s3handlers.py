@@ -5,8 +5,6 @@ from zipfile import ZipFile
 from collections import Counter
 
 from connectors import Connector, S3Connector
-from helper_functions import (parse_coverage_month, parse_filename,
-                              extract_month_updates)
 
 
 class S3EnramHandler(S3Connector):
