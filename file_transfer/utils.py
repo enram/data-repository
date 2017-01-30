@@ -29,7 +29,8 @@ def parse_filename(name):
     """
 
     name_regex = re.compile(
-        r'([^_]{2})([^_]{3})_([^_]*)_(\d\d\d\d)(\d\d)(\d\d)T?(\d\d)(\d\d)(?:Z|00)?.*\.h5')
+        r'([^_]{2})([^_]{3})_([^_]*)_(\d\d\d\d)(\d\d)(\d\d)T?'
+        r'(\d\d)(\d\d)(?:Z|00)?.*\.h5')
 
     match = re.match(name_regex, name)
     if match:
@@ -97,16 +98,15 @@ def coverage_to_csv(csvfile, coverage_count):
     To use the functionality, provide a file handler (with open() as
     csvfile: ...)
 
-    :param csvfile: a file handle (or file-like object)
+    :param csvfile: an open file handle (or file-like object)
     :param coverage_count: Counter (dict) object with the key values according
     to the ccrrr yyy-mm format
-    :return:
     """
 
     fieldnames = ['countryradar', 'date', 'vp_files']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
-    for fileinfo, count in coverage_count.items():
+    for fileinfo, count in sorted(coverage_count.items()):
         country_radar = fileinfo.split(" ")[0]
         date = fileinfo.split(" ")[1]
         writer.writerow({'countryradar': country_radar,

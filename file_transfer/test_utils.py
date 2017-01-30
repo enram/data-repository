@@ -66,12 +66,14 @@ def test_coverage_to_csv():
                                'bejab 2016-11-06': 166,
                                'bezav 2015-10-11': 8})
     results = ["countryradar,date,vp_files\r\n",
-               "bezav,2015-10-11,8\r\n",
                "bejab,2016-11-06,166\r\n",
-               "ukjer,2015-10-01,2\r\n"]
+               "bezav,2015-10-11,8\r\n",
+               "ukjer,2015-10-01,2\r\n"
+               ]
     outfile = StringIO()
     coverage_to_csv(outfile, example_counter)
     outfile.seek(0)
     for line in results:
         assert line == outfile.readline()
+
 
