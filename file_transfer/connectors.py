@@ -22,9 +22,7 @@ class LocalConnector(Connector):
 
     def __init__(self, filepath):
         """Connector to handle local directory files, focusing on a specific
-        folder subset asa defined by the main filepath
-
-        :param filepath: main directory to work in
+        folder subset as defined by the main filepath
         """
         self.filepath = filepath
 
@@ -51,9 +49,9 @@ class LocalConnector(Connector):
         for subpath in glob(path_to_list, recursive=True):
             if name_match in subpath:
                 if fullpaths:
-                    yield path
+                    yield subpath
                 else:
-                    yield os.path.split(path)[-1]
+                    yield os.path.split(subpath)[-1]
 
 
 class GithubConnector(Connector):
