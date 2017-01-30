@@ -29,21 +29,3 @@ def test_parse_filename():
         for key in ['country', 'data_type', 'day', 'hour', 'minute',
                     'month', 'radar', 'year']:
             assert result[key] == expected_result[key]
-
-
-# ==============================
-# Test connectors with external services
-# ==============================
-
-
-def test_list_files_from_github():
-    """
-    This test contains no assertions. It's obviously not a great test. It prints out the files returned
-    by the GithubConnector so you can manually check this.
-    :return:
-    """
-    gc = GithubConnector(repo_username='adokter',
-                         repo_name='ODIM-hdf5-test',
-                         paths=['vp'])
-    for f in gc.list_files():
-        print(f)
