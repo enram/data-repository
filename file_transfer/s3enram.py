@@ -5,6 +5,8 @@ from zipfile import ZipFile
 from collections import Counter
 
 from .connectors import S3Connector
+from .utils import (parse_filename, extract_month_updates,
+                    parse_coverage_month)
 
 
 class S3EnramHandler(S3Connector):
@@ -12,8 +14,8 @@ class S3EnramHandler(S3Connector):
     def __init__(self, bucket_name=None):
         S3Connector.__init__(self, bucket_name)
 
-    def upload_file(self, filepath, overwrite=False):
-        """
+    def upload_enram_file(self, filepath, overwrite=False):
+        """upload_file
 
         :param filepath:
         :param overwrite:

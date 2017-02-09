@@ -4,10 +4,10 @@ Baltrad to S3 porting
 
 import sys
 
-from creds import URL, LOGIN, PASSWORD
-from connectors import BaltradToS3
-from s3handlers import S3Handler
-from helper_functions import coverage_to_csv
+from .creds import URL, LOGIN, PASSWORD
+from .transporters import BaltradToS3
+from .utils import coverage_to_csv
+from .s3enram import S3EnramHandler
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
     # ------------------
 
     # Connecto to S3 client
-    s3client = S3Handler("lw-enram")
+    s3client = S3EnramHandler("lw-enram")
 
     # Rerun file list overview to extract the current coverage
     coverage_count = s3client.count_enram_coverage(level='day')
