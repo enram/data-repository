@@ -1,4 +1,10 @@
 
+import os
+from datetime import datetime
+
+from .connectors import BaltradFTPConnector, LocalConnector
+from .s3enram import S3EnramHandler
+
 
 class Porter:
 
@@ -54,7 +60,7 @@ class BaltradToS3(Porter):
         """
         Porter.__init__(self)
         self.ftp = BaltradFTPConnector(ftp_url, ftp_login, ftp_pwd)
-        self.s3 = S3Connector(bucketname)
+        self.s3 = S3EnramHandler(bucketname)
 
     def transfer(self, name_match="_vp_", overwrite=False,
                  limit=None, verbose=False):
@@ -67,7 +73,6 @@ class BaltradToS3(Porter):
         :param verbose:
         :return:
         """
-
         for j, filename in enumerate(self.ftp.list_files(
                 namematch=name_match)):
 
@@ -75,9 +80,10 @@ class BaltradToS3(Porter):
             with open(filename, 'bw') as f:
                 self.ftp._ftp.retrbinary('RETR ' + filename, f.write)
 
-                upload_succes = self.s3.upload_file_enram(filename,
+                upload_succes = self.s3.upload_enram_file(filename,
                                                           overwrite=overwrite)
                 self.log_transfer(upload_succes, filename, verbose)
+                os.remove(filename)
 
             if isinstance(limit, int) and j >= limit-1:
                 break
@@ -92,8 +98,8 @@ class LocalToS3(Porter):
         :param filepath:
         """
         Porter.__init__(self)
-        self.s3 = S3Connector(bucketname)
         self.local = LocalConnector(filepath)
+        self.s3 = S3EnramHandler(bucketname)
 
     def transfer(self, name_match="_vp_", overwrite=False,
                  limit=None, verbose=False):
