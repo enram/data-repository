@@ -95,8 +95,8 @@ class S3EnramHandler(S3Connector):
             # Download the proper files (all! the files in the
             # respective subdirs)
             current_keys = []
-            for key in self.list_files_path(
-                    paths="/".join([country, radar, year, month])):
+            for key in self.list_files(
+                    path="/".join([country, radar, year, month])):
                 self.download_file(key)
                 current_keys.append(key)
 
