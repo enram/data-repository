@@ -40,7 +40,8 @@ def main():
     # ----------------------------
     # UPDATE ZIP FILE AVAILABILITY
     # ----------------------------
-    # Rerun ZIP handling to create files
+    # Rerun ZIP handling of S3 for the transferred files, given by report
+    s3client.create_zip_version(btos.transferred)
 
 
 if __name__ == "__main__":
