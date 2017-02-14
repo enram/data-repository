@@ -1,5 +1,5 @@
 
-from file_transfer import *
+from ..datamover.utils import *
 
 
 def test_parse_filename():

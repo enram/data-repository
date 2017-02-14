@@ -1,7 +1,7 @@
 
 import pytest
 
-from .connectors import LocalConnector
+from ..datamover.connectors import LocalConnector
 
 
 @pytest.fixture

@@ -4,14 +4,9 @@ Baltrad to S3 porting
 
 import sys
 
-import  as ft
 
-ft.
-
-from .creds import URL, LOGIN, PASSWORD
-from .transporters import BaltradToS3
-from .utils import coverage_to_csv
-from .s3enram import S3EnramHandler
+from creds import URL, LOGIN, PASSWORD
+import datamover as dm
 
 
 def main():
@@ -22,7 +17,7 @@ def main():
     # ------------------
 
     # Setup the connection of the Baltrad and S3
-    btos = BaltradToS3(URL, LOGIN, PASSWORD, "lw-enram")
+    btos = dm.BaltradToS3(URL, LOGIN, PASSWORD, "lw-enram")
 
     # Execute the transfer
     btos.transfer(name_match="_vp_", overwrite=False, limit=None)
@@ -33,12 +28,12 @@ def main():
     # ------------------
 
     # Connecto to S3 client
-    s3client = S3EnramHandler("lw-enram")
+    s3client = dm.S3EnramHandler("lw-enram")
 
     # Rerun file list overview to extract the current coverage
     coverage_count = s3client.count_enram_coverage(level='day')
     with open("coverage.csv", 'w') as outfile:
-        coverage_to_csv(outfile, coverage_count)
+        dm.coverage_to_csv(outfile, coverage_count)
     s3client.upload_file("coverage.csv", "coverage.csv")
 
     # ----------------------------
