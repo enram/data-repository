@@ -28,3 +28,12 @@ This procedure describes how bird profile data should be transferred from the BA
                             └── hour
                                 └── filename: dkrom_vp_20170114231500.h5
 
+
+The `baltrad_to_s3.py` file provides the functionality to transfer the hdf5 files from baltrad to the S3 bucket. Furthermore, the coverage file is updated based on the new listing of files and the intermediate monthly zip-files are updated for the set of uploaded files.
+
+
+## Using the datamover Python module
+
+When using Anaconda, the required Python environment can be created by using the `environment.yml` file. Make sure you set the default channel to `conda-forge` by adapting the settings of the conda installation: `conda config --add channels conda-forge`. 
+
+
