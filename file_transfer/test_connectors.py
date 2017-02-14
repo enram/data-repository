@@ -29,7 +29,7 @@ class TestLocalConnect:
         tmpdir, be_base, be, no = getlocaldir
         localclient = LocalConnector(tmpdir.dirname)
 
-        files = list(localclient.list_files(path = None,
+        files = list(localclient.list_files(path=None,
                                             name_match="_vp_",
                                             fullpaths=False))
         expect_files = ["bejab_vp_20161120225000.h5",
