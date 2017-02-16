@@ -4,9 +4,37 @@
 
 On the [BALTRAD](http://baltrad.eu/) infrastructure, a [vol2bird](https://github.com/adokter/vol2bird) pipeline generates vertical profiles of birds from weather radar volume scans for over 100 radars. To archive these data, ENRAM has set up an open data repository at http://enram.github.io/data-repository.
 
-## Data flow
+## Use
 
-[![schema](https://cdn.rawgit.com/enram/data-repository/cbd27945/schema.svg)
+### Browsing the data
+
+You can browse the bird profile data at http://enram.github.io/data-repository, which uses the following directory structure and name conventions:
+
+```
+structure                                   name convention
+
+└── country                                 2 letter code
+    └── radar                               3 letter code
+        └── year                            yyyy
+            └── month                       mm
+                └── day                     dd
+                    └── hour                hh
+                        └── data file       corad_vp_yyyymmddhhmmss.h5
+```
+
+In addition to separate data files, a zip file is provided for every radar/month combination (`coradyyyymm.zip`), which is more convenient to download. These zips can be found in the year directories (e.g. [here](http://enram.github.io/data-repository/?prefix=nl/dbl/2017/)).
+
+The repository also provides a calendar heatmap to quickly visualize data coverage for a radar/year combination. It can also be found in the year directories (e.g. [here](http://enram.github.io/data-repository/?prefix=nl/dbl/2017/)) and is based on the expected files vs the actual files in the data repository.
+
+### Data access via R
+
+Bird profile files can be downloaded programmatically with the R package [bioRad](https://github.com/adokter/bioRad). [This vignette](https://github.com/enram/bioRad/blob/master/vignettes/intro_vp.Rmd) explains how to do so.
+
+### File transfer to the data repository
+
+See [file_transfer](file_transfer) for code and documentation.
+
+[![schema](https://cdn.rawgit.com/enram/data-repository/e23d27b4/schema.svg)](schema.svg)
 
 ## Contributors
 
