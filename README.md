@@ -6,7 +6,7 @@ On the [BALTRAD](http://baltrad.eu/) infrastructure, a [vol2bird](https://github
 
 ## Data flow
 
-[![schema](https://rawgit.com/enram/infrastructure/master/schema.svg)](schema.svg)
+[![schema](https://cdn.rawgit.com/enram/data-repository/cbd27945/schema.svg)
 
 ## Contributors
 
