@@ -2,7 +2,7 @@
 
 ## Rationale
 
-On the [BALTRAD](http://baltrad.eu/) infrastructure, a [vol2bird](https://github.com/adokter/vol2bird) pipeline generates vertical profiles of birds from weather radar volume scans for over 100 radars. To archive these data, ENRAM has set up an open data repository at http://enram.github.io/data-repository.
+On the [BALTRAD](http://baltrad.eu/) infrastructure, a [vol2bird](https://github.com/adokter/vol2bird) pipeline generates vertical profiles of birds from weather radar volume scans for over 100 radars. To archive these data, the [European Network for the Radar surveillance of Animal Movement (ENRAM)](http://enram.eu) has set up an open data repository at http://enram.github.io/data-repository.
 
 ## Use
 
