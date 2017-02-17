@@ -1,4 +1,4 @@
-# ENRAM data repository for bird profile data
+# ENRAM data repository for bird profiles
 
 ## Rationale
 
