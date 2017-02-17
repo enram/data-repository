@@ -13,14 +13,15 @@ You can browse the bird profile data at http://enram.github.io/data-repository, 
 ```
 structure                                   name convention
 
-└── country                                 2 letter code
-    └── radar                               3 letter code
+└── country                                 two-letter code (ISO 3166-1 alpha-2)
+    └── radar                               three-letter code (last 3 letters from the ODIM code)
         └── year                            yyyy
             └── month                       mm
                 └── day                     dd
                     └── hour                hh
                         └── data file       corad_vp_yyyymmddhhmmss.h5
 ```
+An overview of the potentially included radars, their location and codes can be found on [this OPERA radar map](http://eumetnet.eu/wp-content/themes/aeron-child/observations-programme/current-activities/opera/database/OPERA_Database/index.html). The bird profile h5 data files follow the [ODIM bird profile format specification](https://github.com/adokter/vol2bird/wiki/ODIM-bird-profile-format-specification).
 
 In addition to separate data files, a zip file is provided for every radar/month combination (`coradyyyymm.zip`), which is more convenient to download. These zips can be found in the year directories (e.g. [here](http://enram.github.io/data-repository/?prefix=nl/dbl/2017/)).
 
