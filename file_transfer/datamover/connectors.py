@@ -23,19 +23,22 @@ class LocalConnector(Connector):
     def __init__(self, filepath):
         """Connector to handle local directory files, focusing on a specific
         folder subset as defined by the main filepath
+
+        :param filepath: main project directory to look into
         """
         self.filepath = filepath
 
     def download_file(self, file):
-        """"""
+        """Not relevant for this connector"""
         return NotImplemented
 
     def list_files(self, path=None, name_match="_vp_", fullpaths=False):
-        """
+        """list the files within a given subfolder or relative path
 
         :param path: relative defined to filepath
-        :param name_match:
-        :param fullpaths: bool define if the full path or only relatve path
+        :param name_match: string that should be contained in the file name,
+        default _vp_ (bird profile data)
+        :param fullpaths: bool define if the full path or only relative paths
         should be returned
         :return: iterator with the matching file names of the path folder and
         subfolders
