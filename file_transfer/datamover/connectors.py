@@ -21,7 +21,9 @@ class Connector:
 class LocalConnector(Connector):
 
     def __init__(self, filepath):
-        """Connector to handle local directory files, focusing on a specific
+        """Initialize a Local file path connector
+
+        Connector to handle local directory files, focusing on a specific
         folder subset as defined by the main filepath
 
         :param filepath: main project directory to look into
@@ -35,12 +37,15 @@ class LocalConnector(Connector):
     def list_files(self, path=None, name_match="_vp_", fullpaths=False):
         """list the files within a given subfolder or relative path
 
+        Returns an iterator that allows you to iterate over all files in the
+        given path.
+
         :param path: relative defined to filepath
         :param name_match: string that should be contained in the file name,
         default _vp_ (bird profile data)
         :param fullpaths: bool define if the full path or only relative paths
         should be returned
-        :return: iterator with the matching file names of the path folder and
+        :return: yields the matching file names of the path folder and
         subfolders
         """
         if path:
@@ -60,8 +65,9 @@ class LocalConnector(Connector):
 class GithubConnector(Connector):
 
     def __init__(self, repo_username=None, repo_name=None):
-        """
-        Initialize a GithubConnector
+        """Initialize a GithubConnector
+
+        Connector to handle Github repository
 
         :param repo_username: username of the repository owner
         :param repo_name: name of the repository
@@ -71,8 +77,9 @@ class GithubConnector(Connector):
 
     @staticmethod
     def _parse_files_from_response(response):
-        """
+        """Github response parse function
         Parses the download_urls from the response and yields them one by one
+
         :param response: a JSON response from the Github API that lists files
         in a given directory
         """
@@ -98,12 +105,12 @@ class GithubConnector(Connector):
             w.write(response.content)
 
     def list_files(self, path=None):
-        """
+        """list the files within a given subfolder or relative path
+
         Returns an iterator that allows you to iterate over all files (i.e.
         the download link of each file) in the given path.
 
-        :param paths: a path on the remote location to find files
-
+        :param path: a path on the remote location to find files
         :return: yields a dictionary with the keys download_url, path and name
         """
 
