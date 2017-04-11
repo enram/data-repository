@@ -50,28 +50,31 @@ class Porter:
 
 class BaltradToS3(Porter):
 
-    def __init__(self, ftp_url, ftp_login, ftp_pwd, bucketname):
-        """Tunnel Baltrad server to S3
+    def __init__(self, ftp_url, ftp_username, ftp_pwd, bucket_name):
+        """Port files from Baltrad server to S3
 
-        :param ftp_URL:
-        :param ftp_LOGIN:
-        :param ftp_PASSWORD:
-        :param bucketname:
+        :param ftp_url: url of the FTP
+        :param ftp_username: username of the FTP
+        :param ftp_pwd: password of the FTP username
+        :param bucket_name: name of the S3 bucket
+        :type bucket_name: string
         """
         Porter.__init__(self)
-        self.ftp = FTPConnector(ftp_url, ftp_login, ftp_pwd)
-        self.s3 = S3EnramHandler(bucketname)
+        self.ftp = FTPConnector(ftp_url, ftp_username, ftp_pwd)
+        self.s3 = S3EnramHandler(bucket_name)
 
     def transfer(self, name_match="_vp_", overwrite=False,
                  limit=None, verbose=False):
-        """transfer all current baltrad files to s3 with the given name_match
+        """Transfer all current Baltrad files to s3 with the given name_match
         included
 
-        :param name_match:
-        :param overwrite:
-        :param limit:
-        :param verbose:
-        :return:
+        :param name_match: string that should be contained in the file name,
+        default _vp_ (bird profile data)
+        :param overwrite: If True, overwrite the existing file on the bucket
+        :type overwrite: bool
+        :param limit: for debugging/testing purposes only, limit the total
+        number of transfers
+        :param verbose: Make transfer description more extended
         """
         for j, filename in enumerate(self.ftp.list_files(
                 name_match=name_match)):
@@ -91,25 +94,28 @@ class BaltradToS3(Porter):
 
 class LocalToS3(Porter):
 
-    def __init__(self, bucketname, filepath):
-        """Tunnel Baltrad server to S3
+    def __init__(self, bucket_name, filepath):
+        """Port files from local file system to S3
 
-        :param bucketname:
-        :param filepath:
+        :param bucket_name: name of the S3 bucket
+        :type bucket_name: string
+        :param filepath: main project directory to write files to
         """
         Porter.__init__(self)
         self.local = LocalConnector(filepath)
-        self.s3 = S3EnramHandler(bucketname)
+        self.s3 = S3EnramHandler(bucket_name)
 
     def transfer(self, name_match="_vp_", overwrite=False,
                  limit=None, verbose=False):
         """transfer all profiles in folder to s3
 
-        :param name_match:
-        :param overwrite:
-        :param limit:
-        :param verbose:
-        :return:
+        :param name_match: string that should be contained in the file name,
+        default _vp_ (bird profile data)
+        :param overwrite: If True, overwrite the existing file on the bucket
+        :type overwrite: bool
+        :param limit: for debugging/testing purposes only, limit the total
+        number of transfers
+        :param verbose: Make transfer description more extended
         """
         for j, filepath in enumerate(
                 self.local.list_files(name_match, paths=True)):

@@ -136,7 +136,7 @@ class S3Connector(Connector):
         a ~/.aws/credentials file with your aws_access_key_id and
         aws_secret_access_key.
 
-        :param bucket_name: name of the bucket
+        :param bucket_name: name of the S3 bucket
         :type bucket_name: string
         """
         self.bucket_name = bucket_name
