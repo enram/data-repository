@@ -34,7 +34,7 @@ class Porter:
             file_handler = "w"
         else:
             file_handler = "a"
-        with open('./logtest', file_handler) as outfile:
+        with open('./log_file_transfer', file_handler) as outfile:
             outfile.write("-" * 55 + "\n")
             outfile.write("Data transfer at {} from {}:\n".format(
                 datetime.now().strftime("%Y-%m-%d %H:%M"), transfertype))
