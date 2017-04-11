@@ -38,7 +38,7 @@ class LocalConnector(Connector):
         """list the files within a given subfolder or relative path
 
         Returns an iterator that allows you to iterate over all files in the
-        given path.
+        given path, optionally only those with a specific name match
 
         :param path: relative defined to filepath
         :param name_match: string that should be contained in the file name,
@@ -252,9 +252,14 @@ class FTPConnector(Connector):
     def __init__(self, ftp_url=None, ftp_username=None,
                  ftp_pwd=None, subfolder='data'):
         """Initialize a Connector to a FTP drive
+        Initialize a Connection to an FTP drive or a specific subfolder of the
+        FTP drive under consideration
 
-        :param repo_username: username of the repository owner
-        :param repo_name: name of the repository
+        :param ftp_url: url of the FTP
+        :param ftp_username: username of the FTP
+        :param ftp_pwd: password of the FTP username
+        :param subfolder: optional subfolder listing to set working directory (
+        or None)
         """
         self._ftp_url = ftp_url
         self._ftp_username = ftp_username
@@ -264,8 +269,7 @@ class FTPConnector(Connector):
                              self._ftp_pwd, subfolder)
 
     def _connect_to_ftp(self, url, login, pwd, subfolder=None):
-        """
-        Private method to connect to the S3 service
+        """Private method to connect to the FTP drive
         """
         self._ftp = FTP(host=url, user=login, passwd=pwd)
         if subfolder:
@@ -275,22 +279,24 @@ class FTPConnector(Connector):
         self._ftp.quit()
 
     def download_file(self, filename):
-        """download a single file
+        """Download a single file
+        Download a file with a given filename from FTP
 
         :param filename:
-        :return:
+        :type filename: string
         """
         with open(filename, 'wb') as f:
             self._ftp.retrbinary('RETR ' + filename, f.write)
 
-    def list_files(self, namematch="_vp_"):
-        """
-        Returns an iterator that allows you to iterate over all files
-        (i.e. the filename of each file) in the given paths.
+    def list_files(self, name_match="_vp_"):
+        """list the files within the current working directory
+        Returns an iterator that allows you to iterate over all files in the
+        current working directory, optionally only those with a specific name match
 
+        :param name_match: string that should be contained in the file name,
+        default _vp_ (bird profile data)
+        :return: yields the file names
         """
         for fname in self._ftp.nlst():
-            if namematch in fname:
+            if name_match in fname:
                 yield fname
-
-

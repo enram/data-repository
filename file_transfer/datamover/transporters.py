@@ -74,7 +74,7 @@ class BaltradToS3(Porter):
         :return:
         """
         for j, filename in enumerate(self.ftp.list_files(
-                namematch=name_match)):
+                name_match=name_match)):
 
             # get the files from ftp:
             with open(filename, 'bw') as f:
