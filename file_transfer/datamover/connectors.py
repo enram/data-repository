@@ -93,7 +93,8 @@ class GithubConnector(Connector):
                 }
 
     def download_file(self, item):
-        """download a github file to the current working directory with the
+        """download GitHub file
+        Download a Github file to the current working directory with the
         same subfolders as represented in the repo
 
         :param item: response dict from the github API
@@ -111,6 +112,7 @@ class GithubConnector(Connector):
         the download link of each file) in the given path.
 
         :param path: a path on the remote location to find files
+        :type path: string
         :return: yields a dictionary with the keys download_url, path and name
         """
 
@@ -127,13 +129,14 @@ class GithubConnector(Connector):
 class S3Connector(Connector):
 
     def __init__(self, bucket_name=None):
-        """
-        Initialize a S3Connector by defining the bucket name. The credentials
-        to do so are implicitly derived. For local usage, save
-        a ~/.aws/credentials file with  your aws_access_key_id and
+        """Initialize a Connector to an Amazon S3 bucket
+
+        Initialize a S3Connector by defining the bucket name. The AWS
+        credentials to do so are implicitly derived. For local usage, save
+        a ~/.aws/credentials file with your aws_access_key_id and
         aws_secret_access_key.
 
-        :param bucket_name: name of a bucket
+        :param bucket_name: name of the bucket
         :type bucket_name: string
         """
         self.bucket_name = bucket_name
@@ -141,7 +144,7 @@ class S3Connector(Connector):
         self.bucket = self.s3resource.Bucket(bucket_name)
 
     def _connect_to_s3(self):
-        """
+        """S3 client and resource connection
         Private method to connect to the S3 service. Initaties both the
         resource (s3resource) as well as the client (s3client)
         """
@@ -153,10 +156,10 @@ class S3Connector(Connector):
         self.s3client = self.s3resource.meta.client
 
     def download_file(self, file):
-        """
+        """download S3 bucket file
         Download a file with a given object_key from the bucket
 
-        :param file: dict containing information about the file to be downloaded
+        :param file: dict containing information about the file to download
         :return: nothing
         """
         response = self.s3client.get_object(Bucket=self.bucket_name,
@@ -167,8 +170,9 @@ class S3Connector(Connector):
             w.write(response['Body'].read())
 
     def upload_file(self, filename, object_key):
-        """
-        Upload a (binary) file to the bucket
+        """Upload a (binary) file to the bucket
+        Upload a file with a local filename to the S3 bucket providing an
+        object_key from
 
         :param filename: name of the file on the local system
         :param object_key: name of the file to be used in the bucket (note
@@ -183,7 +187,9 @@ class S3Connector(Connector):
     def _strchecklister(input2check):
         """string to list converter
 
-        check if input is a string and make a one element list from string
+        Check if input is a string and make a one element list from string
+
+        :type input2check: str|list
         """
         if isinstance(input2check, str):
             return [input2check]
@@ -192,8 +198,12 @@ class S3Connector(Connector):
 
     # TODO: add name_match to the list files
     def list_files(self, path=None):
-        """
-        List all files in the bucket.
+        """list the files within a given path
+        Returns an iterator that allows you to iterate over all files in the
+        Bucket or those files with a given path in the prefix (subfolders)
+
+        :param path: a path of the S3 Bucket to find files
+        :type path: string
         """
 
         if path:
@@ -212,7 +222,15 @@ class S3Connector(Connector):
                 yield key.key.split("/")[-1]
 
     def key_exists(self, file_key):
-        """check if key is already inside a bucket, rel to path"""
+        """Check the existence of a file
+        Check if a file, represented by the file key is already inside the
+        bucket. Note that the concept of folder is in S3 just a name
+        convention, so provide the subfolder enlisting as file_key
+
+        :param file_key: full file subdirectory and name listing
+        :type file_key: string
+        :return: True|false
+        """
 
         exists = False
         try:
