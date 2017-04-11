@@ -245,14 +245,13 @@ class S3Connector(Connector):
         return exists
 
 
-class BaltradFTPConnector(Connector):
+class FTPConnector(Connector):
 
     _ftp_connection = None
 
     def __init__(self, ftp_url=None, ftp_username=None,
                  ftp_pwd=None, subfolder='data'):
-        """
-        Initialize a GithubConnector
+        """Initialize a Connector to a FTP drive
 
         :param repo_username: username of the repository owner
         :param repo_name: name of the repository
@@ -264,12 +263,13 @@ class BaltradFTPConnector(Connector):
         self._connect_to_ftp(self._ftp_url, self._ftp_username,
                              self._ftp_pwd, subfolder)
 
-    def _connect_to_ftp(self, url, login, pwd, subfolder):
+    def _connect_to_ftp(self, url, login, pwd, subfolder=None):
         """
         Private method to connect to the S3 service
         """
         self._ftp = FTP(host=url, user=login, passwd=pwd)
-        self._ftp.cwd(subfolder)
+        if subfolder:
+            self._ftp.cwd(subfolder)
 
     def __del__(self):
         self._ftp.quit()

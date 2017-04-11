@@ -2,7 +2,7 @@
 import os
 from datetime import datetime
 
-from .connectors import BaltradFTPConnector, LocalConnector
+from .connectors import FTPConnector, LocalConnector
 from .s3enram import S3EnramHandler
 
 
@@ -59,7 +59,7 @@ class BaltradToS3(Porter):
         :param bucketname:
         """
         Porter.__init__(self)
-        self.ftp = BaltradFTPConnector(ftp_url, ftp_login, ftp_pwd)
+        self.ftp = FTPConnector(ftp_url, ftp_login, ftp_pwd)
         self.s3 = S3EnramHandler(bucketname)
 
     def transfer(self, name_match="_vp_", overwrite=False,
