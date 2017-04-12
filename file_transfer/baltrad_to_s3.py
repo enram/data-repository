@@ -27,7 +27,7 @@ def main():
     # UPDATE COVERAGE
     # ------------------
 
-    # Connecto to S3 client
+    # Connect to S3 client
     s3client = dm.S3EnramHandler("lw-enram")
 
     # Rerun file list overview to extract the current coverage
