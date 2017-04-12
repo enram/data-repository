@@ -54,7 +54,7 @@ class LocalConnector(Connector):
         else:
             path_to_list = os.path.join(self.filepath, "**",
                                         "*{}*".format(name_match))
-        for subpath in glob(path_to_list, recursive=True):
+        for subpath in glob(os.path.abspath(path_to_list), recursive=True):
             if name_match in subpath:
                 if fullpaths:
                     yield subpath
