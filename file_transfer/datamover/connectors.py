@@ -128,7 +128,7 @@ class GithubConnector(Connector):
 
 class S3Connector(Connector):
 
-    def __init__(self, bucket_name=None):
+    def __init__(self, bucket_name=None, profile_name='lw-enram'):
         """Initialize a Connector to an Amazon S3 bucket
 
         Initialize a S3Connector by defining the bucket name. The AWS
@@ -140,17 +140,18 @@ class S3Connector(Connector):
         :type bucket_name: string
         """
         self.bucket_name = bucket_name
-        self._connect_to_s3()
+        self._connect_to_s3(profile_name)
         self.bucket = self.s3resource.Bucket(bucket_name)
 
-    def _connect_to_s3(self):
+    def _connect_to_s3(self, profile_name):
         """S3 client and resource connection
         Private method to connect to the S3 service. Initaties both the
         resource (s3resource) as well as the client (s3client)
         """
 
         # Create the resource
-        self.s3resource = boto3.resource('s3')
+        session = boto3.Session(profile_name=profile_name)
+        self.s3resource = session.resource('s3')
 
         # Get the S3 client from the resource
         self.s3client = self.s3resource.meta.client
