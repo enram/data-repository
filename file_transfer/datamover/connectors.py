@@ -67,7 +67,7 @@ class GithubConnector(Connector):
     def __init__(self, repo_username=None, repo_name=None):
         """Initialize a GithubConnector
 
-        Connector to handle Github repository
+        Connector to handle GitHub repository
 
         :param repo_username: username of the repository owner
         :param repo_name: name of the repository
@@ -77,10 +77,10 @@ class GithubConnector(Connector):
 
     @staticmethod
     def _parse_files_from_response(response):
-        """Github response parse function
+        """GitHub response parse function
         Parses the download_urls from the response and yields them one by one
 
-        :param response: a JSON response from the Github API that lists files
+        :param response: a JSON response from the GitHub API that lists files
         in a given directory
         """
         response_data = response.json()
@@ -94,10 +94,10 @@ class GithubConnector(Connector):
 
     def download_file(self, item):
         """download GitHub file
-        Download a Github file to the current working directory with the
+        Download a GitHub file to the current working directory with the
         same subfolders as represented in the repo
 
-        :param item: response dict from the github API
+        :param item: response dict from the GitHub API
         """
         response = requests.get(item['download_url'])
         full_name = item['path']
