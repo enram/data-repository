@@ -29,7 +29,13 @@ class Porter:
                 print("{} is not transferred to S3 bucket".format(filename))
 
     def report(self, reset_file=False, transfertype="Baltrad to S3"):
-        """report about the transferred and stalled files"""
+        """report about the transferred and stalled files
+
+        :param reset_file: if True, a new file is created and an existing
+        log file is deleted; if False, text appends
+        :param transfertype: Additional text to define the transfer type, 
+        provided in the header of the transfer section
+        """
         if reset_file:
             file_handler = "w"
         else:
