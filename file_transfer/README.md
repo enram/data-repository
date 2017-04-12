@@ -139,4 +139,4 @@ The following setup is required on the Amazon EC2 Ubuntu machine to deploy the d
 
 **Remark:** In case of trouble, first check any error messages in the `cronlog_enram` file or check the system logs in the `/var/log` folder.
 
-**Remark:** As the Amazon EC2 instance is actually an Ubuntu machine in the AWS cloud, this could also be any other server that is properly configured. However, the specific access rights to the Amazon S3 makes should be adapted when running the service on another machine. 
+**Remark:** The Amazon EC2 instance is merely an Ubuntu Machine in the AWS cloud. It is therefore possible to replicate this setup on any other server, as long as it is configured properly, especially the access rights to the Amazon S3 bucket.
