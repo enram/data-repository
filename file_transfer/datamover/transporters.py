@@ -124,9 +124,9 @@ class LocalToS3(Porter):
         :param verbose: Make transfer description more extended
         """
         for j, filepath in enumerate(
-                self.local.list_files(name_match, paths=True)):
+                self.local.list_files(name_match=name_match, fullpaths=True)):
 
-            upload_succes = self.s3.upload_file_enram(filepath,
+            upload_succes = self.s3.upload_enram_file(filepath,
                                                       overwrite=overwrite)
             self.log_transfer(upload_succes, os.path.split(filepath)[-1],
                               verbose)
