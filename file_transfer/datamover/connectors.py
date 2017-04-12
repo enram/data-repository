@@ -21,23 +21,31 @@ class Connector:
 class LocalConnector(Connector):
 
     def __init__(self, filepath):
-        """Connector to handle local directory files, focusing on a specific
+        """Initialize a Local file path connector
+
+        Connector to handle local directory files, focusing on a specific
         folder subset as defined by the main filepath
+
+        :param filepath: main project directory to look into
         """
         self.filepath = filepath
 
     def download_file(self, file):
-        """"""
+        """Not relevant for this connector"""
         return NotImplemented
 
     def list_files(self, path=None, name_match="_vp_", fullpaths=False):
-        """
+        """list the files within a given subfolder or relative path
+
+        Returns an iterator that allows you to iterate over all files in the
+        given path, optionally only those with a specific name match
 
         :param path: relative defined to filepath
-        :param name_match:
-        :param fullpaths: bool define if the full path or only relatve path
+        :param name_match: string that should be contained in the file name,
+        default _vp_ (bird profile data)
+        :param fullpaths: bool define if the full path or only relative paths
         should be returned
-        :return: iterator with the matching file names of the path folder and
+        :return: yields the matching file names of the path folder and
         subfolders
         """
         if path:
@@ -46,7 +54,7 @@ class LocalConnector(Connector):
         else:
             path_to_list = os.path.join(self.filepath, "**",
                                         "*{}*".format(name_match))
-        for subpath in glob(path_to_list, recursive=True):
+        for subpath in glob(os.path.abspath(path_to_list), recursive=True):
             if name_match in subpath:
                 if fullpaths:
                     yield subpath
@@ -57,8 +65,9 @@ class LocalConnector(Connector):
 class GithubConnector(Connector):
 
     def __init__(self, repo_username=None, repo_name=None):
-        """
-        Initialize a GithubConnector
+        """Initialize a GithubConnector
+
+        Connector to handle GitHub repository
 
         :param repo_username: username of the repository owner
         :param repo_name: name of the repository
@@ -68,9 +77,10 @@ class GithubConnector(Connector):
 
     @staticmethod
     def _parse_files_from_response(response):
-        """
+        """GitHub response parse function
         Parses the download_urls from the response and yields them one by one
-        :param response: a JSON response from the Github API that lists files
+
+        :param response: a JSON response from the GitHub API that lists files
         in a given directory
         """
         response_data = response.json()
@@ -83,10 +93,11 @@ class GithubConnector(Connector):
                 }
 
     def download_file(self, item):
-        """download a github file to the current working directory with the
+        """download GitHub file
+        Download a GitHub file to the current working directory with the
         same subfolders as represented in the repo
 
-        :param item: response dict from the github API
+        :param item: response dict from the GitHub API
         """
         response = requests.get(item['download_url'])
         full_name = item['path']
@@ -95,12 +106,13 @@ class GithubConnector(Connector):
             w.write(response.content)
 
     def list_files(self, path=None):
-        """
+        """list the files within a given subfolder or relative path
+
         Returns an iterator that allows you to iterate over all files (i.e.
         the download link of each file) in the given path.
 
-        :param paths: a path on the remote location to find files
-
+        :param path: a path on the remote location to find files
+        :type path: string
         :return: yields a dictionary with the keys download_url, path and name
         """
 
@@ -116,37 +128,39 @@ class GithubConnector(Connector):
 
 class S3Connector(Connector):
 
-    def __init__(self, bucket_name=None):
-        """
-        Initialize a S3Connector by defining the bucket name. The credentials
-        to do so are implicitly derived. For local usage, save
-        a ~/.aws/credentials file with  your aws_access_key_id and
+    def __init__(self, bucket_name=None, profile_name='lw-enram'):
+        """Initialize a Connector to an Amazon S3 bucket
+
+        Initialize a S3Connector by defining the bucket name. The AWS
+        credentials to do so are implicitly derived. For local usage, save
+        a ~/.aws/credentials file with your aws_access_key_id and
         aws_secret_access_key.
 
-        :param bucket_name: name of a bucket
+        :param bucket_name: name of the S3 bucket
         :type bucket_name: string
         """
         self.bucket_name = bucket_name
-        self._connect_to_s3()
+        self._connect_to_s3(profile_name)
         self.bucket = self.s3resource.Bucket(bucket_name)
 
-    def _connect_to_s3(self):
-        """
+    def _connect_to_s3(self, profile_name):
+        """S3 client and resource connection
         Private method to connect to the S3 service. Initaties both the
         resource (s3resource) as well as the client (s3client)
         """
 
         # Create the resource
-        self.s3resource = boto3.resource('s3')
+        session = boto3.Session(profile_name=profile_name)
+        self.s3resource = session.resource('s3')
 
         # Get the S3 client from the resource
         self.s3client = self.s3resource.meta.client
 
     def download_file(self, file):
-        """
+        """download S3 bucket file
         Download a file with a given object_key from the bucket
 
-        :param file: dict containing information about the file to be downloaded
+        :param file: dict containing information about the file to download
         :return: nothing
         """
         response = self.s3client.get_object(Bucket=self.bucket_name,
@@ -157,8 +171,9 @@ class S3Connector(Connector):
             w.write(response['Body'].read())
 
     def upload_file(self, filename, object_key):
-        """
-        Upload a (binary) file to the bucket
+        """Upload a (binary) file to the bucket
+        Upload a file with a local filename to the S3 bucket providing an
+        object_key from
 
         :param filename: name of the file on the local system
         :param object_key: name of the file to be used in the bucket (note
@@ -173,7 +188,9 @@ class S3Connector(Connector):
     def _strchecklister(input2check):
         """string to list converter
 
-        check if input is a string and make a one element list from string
+        Check if input is a string and make a one element list from string
+
+        :type input2check: str|list
         """
         if isinstance(input2check, str):
             return [input2check]
@@ -182,8 +199,12 @@ class S3Connector(Connector):
 
     # TODO: add name_match to the list files
     def list_files(self, path=None):
-        """
-        List all files in the bucket.
+        """list the files within a given path
+        Returns an iterator that allows you to iterate over all files in the
+        Bucket or those files with a given path in the prefix (subfolders)
+
+        :param path: a path of the S3 Bucket to find files
+        :type path: string
         """
 
         if path:
@@ -202,7 +223,15 @@ class S3Connector(Connector):
                 yield key.key.split("/")[-1]
 
     def key_exists(self, file_key):
-        """check if key is already inside a bucket, rel to path"""
+        """Check the existence of a file
+        Check if a file, represented by the file key is already inside the
+        bucket. Note that the concept of folder is in S3 just a name
+        convention, so provide the subfolder enlisting as file_key
+
+        :param file_key: full file subdirectory and name listing
+        :type file_key: string
+        :return: True|false
+        """
 
         exists = False
         try:
@@ -217,17 +246,21 @@ class S3Connector(Connector):
         return exists
 
 
-class BaltradFTPConnector(Connector):
+class FTPConnector(Connector):
 
     _ftp_connection = None
 
     def __init__(self, ftp_url=None, ftp_username=None,
                  ftp_pwd=None, subfolder='data'):
-        """
-        Initialize a GithubConnector
+        """Initialize a Connector to a FTP drive
+        Initialize a Connection to an FTP drive or a specific subfolder of the
+        FTP drive under consideration
 
-        :param repo_username: username of the repository owner
-        :param repo_name: name of the repository
+        :param ftp_url: url of the FTP
+        :param ftp_username: username of the FTP
+        :param ftp_pwd: password of the FTP username
+        :param subfolder: optional subfolder listing to set working directory (
+        or None)
         """
         self._ftp_url = ftp_url
         self._ftp_username = ftp_username
@@ -236,33 +269,35 @@ class BaltradFTPConnector(Connector):
         self._connect_to_ftp(self._ftp_url, self._ftp_username,
                              self._ftp_pwd, subfolder)
 
-    def _connect_to_ftp(self, url, login, pwd, subfolder):
-        """
-        Private method to connect to the S3 service
+    def _connect_to_ftp(self, url, login, pwd, subfolder=None):
+        """Private method to connect to the FTP drive
         """
         self._ftp = FTP(host=url, user=login, passwd=pwd)
-        self._ftp.cwd(subfolder)
+        if subfolder:
+            self._ftp.cwd(subfolder)
 
     def __del__(self):
         self._ftp.quit()
 
     def download_file(self, filename):
-        """download a single file
+        """Download a single file
+        Download a file with a given filename from FTP
 
         :param filename:
-        :return:
+        :type filename: string
         """
         with open(filename, 'wb') as f:
             self._ftp.retrbinary('RETR ' + filename, f.write)
 
-    def list_files(self, namematch="_vp_"):
-        """
-        Returns an iterator that allows you to iterate over all files
-        (i.e. the filename of each file) in the given paths.
+    def list_files(self, name_match="_vp_"):
+        """list the files within the current working directory
+        Returns an iterator that allows you to iterate over all files in the
+        current working directory, optionally only those with a specific name match
 
+        :param name_match: string that should be contained in the file name,
+        default _vp_ (bird profile data)
+        :return: yields the file names
         """
         for fname in self._ftp.nlst():
-            if namematch in fname:
+            if name_match in fname:
                 yield fname
-
-

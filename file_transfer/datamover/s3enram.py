@@ -15,11 +15,14 @@ class S3EnramHandler(S3Connector):
         S3Connector.__init__(self, bucket_name)
 
     def upload_enram_file(self, filepath, overwrite=False):
-        """upload_file
+        """Upload a (binary) file to the bucket
+        Upload a file with a local filepath (path + filename) to the S3
+        bucket, defining if the file should be overwritten if the key already
+        exists on the S3 bucket
 
-        :param filepath:
-        :param overwrite:
-        :return:
+        :param filepath: full path and file name of the file to upload
+        :param overwrite: If True, overwrite the existing file on the bucket
+        :type overwrite: boolean
         """
 
         with open(filepath, 'br') as f:
@@ -42,7 +45,7 @@ class S3EnramHandler(S3Connector):
                 return True
 
     def count_enram_coverage(self, level='day'):
-        """count the number of files for each country/radar combination
+        """Count the number of files for each country/radar combination
 
         At a given time interval (day, month, year), the available number of
         files in the S3 bucket is counted.
@@ -75,8 +78,8 @@ class S3EnramHandler(S3Connector):
         return file_count
 
     def create_zip_version(self, keylisting):
-        """collect all keys in the listing in a combined zip folder and
-        store the zip on the appropriate s3 location
+        """Collect all keys in the listing in a combined zip folder and
+        store the zip on the appropriate S3 bucket location
 
         Create a zip version of those folders the given keys of the keylisting
         are part of, keys can be defined as a list of keys or as a Counter
