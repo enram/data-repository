@@ -56,7 +56,8 @@ class Porter:
 
 class BaltradToS3(Porter):
 
-    def __init__(self, ftp_url, ftp_username, ftp_pwd, bucket_name):
+    def __init__(self, ftp_url, ftp_username, ftp_pwd,
+                 bucket_name, profile_name=None):
         """Port files from Baltrad server to S3
 
         :param ftp_url: url of the FTP
@@ -64,10 +65,11 @@ class BaltradToS3(Porter):
         :param ftp_pwd: password of the FTP username
         :param bucket_name: name of the S3 bucket
         :type bucket_name: string
+        :param profile_name: name of the AWS profile to use
         """
         Porter.__init__(self)
         self.ftp = FTPConnector(ftp_url, ftp_username, ftp_pwd)
-        self.s3 = S3EnramHandler(bucket_name)
+        self.s3 = S3EnramHandler(bucket_name, profile_name)
 
     def transfer(self, name_match="_vp_", overwrite=False,
                  limit=None, verbose=False):
@@ -100,16 +102,18 @@ class BaltradToS3(Porter):
 
 class LocalToS3(Porter):
 
-    def __init__(self, bucket_name, filepath):
+    def __init__(self, filepath, bucket_name,
+                 profile_name=None):
         """Port files from local file system to S3
 
+        :param filepath: main project directory to write files to
         :param bucket_name: name of the S3 bucket
         :type bucket_name: string
-        :param filepath: main project directory to write files to
+        :param profile_name: name of the AWS profile to use
         """
         Porter.__init__(self)
         self.local = LocalConnector(filepath)
-        self.s3 = S3EnramHandler(bucket_name)
+        self.s3 = S3EnramHandler(bucket_name, profile_name)
 
     def transfer(self, name_match="_vp_", overwrite=False,
                  limit=None, verbose=False):

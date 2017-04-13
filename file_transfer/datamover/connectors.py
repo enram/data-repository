@@ -128,7 +128,7 @@ class GithubConnector(Connector):
 
 class S3Connector(Connector):
 
-    def __init__(self, bucket_name=None, profile_name='lw-enram'):
+    def __init__(self, bucket_name=None, profile_name=None):
         """Initialize a Connector to an Amazon S3 bucket
 
         Initialize a S3Connector by defining the bucket name. The AWS
@@ -138,6 +138,7 @@ class S3Connector(Connector):
 
         :param bucket_name: name of the S3 bucket
         :type bucket_name: string
+        :param profile_name: name of the AWS profile to use
         """
         self.bucket_name = bucket_name
         self._connect_to_s3(profile_name)
