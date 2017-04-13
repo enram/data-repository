@@ -11,8 +11,8 @@ from .utils import (parse_filename, extract_month_updates,
 
 class S3EnramHandler(S3Connector):
 
-    def __init__(self, bucket_name=None):
-        S3Connector.__init__(self, bucket_name)
+    def __init__(self, bucket_name, profile_name=None):
+        S3Connector.__init__(self, bucket_name, profile_name)
 
     def upload_enram_file(self, filepath, overwrite=False):
         """Upload a (binary) file to the bucket
