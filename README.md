@@ -41,6 +41,6 @@ See [file_transfer](file_transfer) for code and documentation.
 
 See [contributors on GitHub](https://github.com/enram/data-repository/graphs/contributors).
 
-## LICENSE
+## License
 
-[MIT](LICENSE)
+[MIT License](LICENSE)
