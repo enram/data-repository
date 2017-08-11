@@ -39,7 +39,7 @@ See [file_transfer](file_transfer) for code and documentation.
 
 ## Contributors
 
-See [contributors on GitHub](https://github.com/enram/data-repository/graphs/contributors).
+[List of contributors](https://github.com/enram/data-repository/contributors)
 
 ## License
 
