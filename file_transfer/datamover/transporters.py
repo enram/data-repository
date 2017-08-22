@@ -91,10 +91,10 @@ class BaltradToS3(Porter):
             with open(filename, 'bw') as f:
                 self.ftp._ftp.retrbinary('RETR ' + filename, f.write)
 
-                upload_succes = self.s3.upload_enram_file(filename,
-                                                          overwrite=overwrite)
-                self.log_transfer(upload_succes, filename, verbose)
-                os.remove(filename)
+            upload_succes = self.s3.upload_enram_file(filename,
+                                                      overwrite=overwrite)
+            self.log_transfer(upload_succes, filename, verbose)
+            os.remove(filename)
 
             if isinstance(limit, int) and j >= limit-1:
                 break
