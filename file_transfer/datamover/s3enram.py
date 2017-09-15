@@ -128,8 +128,4 @@ class S3EnramHandler(S3Connector):
             os.remove(zip_name)
 
             # Remove the affiliated files/folders of the downloads
-            shutil.rmtree(os.path.join(".", file_info['country'],
-                                       file_info['radar'], file_info['year'],
-                                       file_info['month']))
-            os.removedirs(os.path.join(".", file_info['country'],
-                                       file_info['radar'], file_info['year']))
+            shutil.rmtree(os.path.join(".", file_info['country']))
