@@ -29,7 +29,7 @@ The repository also provides a calendar heatmap to quickly visualize data covera
 
 ### Data access via R
 
-Bird profile files can be downloaded programmatically with the R package [bioRad](https://github.com/adokter/bioRad). [This vignette](https://github.com/enram/bioRad/blob/master/vignettes/intro_vp.Rmd) explains how to do so.
+Bird profile files can be downloaded programmatically with the R package [bioRad](https://github.com/adokter/bioRad). [This vignette](https://github.com/adokter/bioRad/blob/master/vignettes/intro_vp.Rmd) explains how to do so.
 
 ### File transfer to the data repository
 
