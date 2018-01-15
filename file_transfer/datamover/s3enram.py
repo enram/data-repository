@@ -2,6 +2,7 @@
 import os
 import shutil
 from zipfile import ZipFile
+from datetime import datetime
 from collections import Counter
 
 from .connectors import S3Connector
@@ -45,7 +46,8 @@ class S3EnramHandler(S3Connector):
                 return True
 
     def count_enram_coverage(self, level='day'):
-        """Count the number of files for each country/radar combination
+        """Count the number of files for each country/radar combination and 
+        extract last modified date
 
         At a given time interval (day, month, year), the available number of
         files in the S3 bucket is counted.
@@ -55,12 +57,20 @@ class S3EnramHandler(S3Connector):
         the values the counts
         """
         file_count = Counter()
+        file_most_recent = {}
 
         for name in self.list_files():
             file_info = parse_filename(name)
             if file_info:
                 country_radar = "{}{}".format(file_info["country"],
                                               file_info["radar"])
+                file_date = datetime(int(file_info["year"]), 
+                                     int(file_info["month"]), 
+                                     int(file_info["day"]), 
+                                     int(file_info["hour"]), 
+                                     int(file_info["minute"]))
+
+                # Get the counts on the required level
                 if level == 'day':
                     date = "-".join(
                         [file_info["year"], file_info["month"],
@@ -72,10 +82,16 @@ class S3EnramHandler(S3Connector):
                 else:
                     raise Exception('Not a valid count option, choose year,'
                                     'month or day')
-
                 file_count[" ".join([country_radar, date])] += 1
 
-        return file_count
+                # Get the most recent file for each country/radar
+                if country_radar in file_most_recent.keys():
+                    if file_date > file_most_recent[country_radar]:
+                        file_most_recent[country_radar] = file_date
+                else:
+                    file_most_recent[country_radar] = file_date
+
+        return file_count, file_most_recent
 
     def create_zip_version(self, keylisting):
         """Collect all keys in the listing in a combined zip folder and
