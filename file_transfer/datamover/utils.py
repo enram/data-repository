@@ -112,3 +112,21 @@ def coverage_to_csv(csvfile, coverage_count):
         writer.writerow({'countryradar': country_radar,
                          'date': date,
                          'vp_files': count})
+
+def most_recent_to_csv(csvfile, most_recent_file):
+    """save dict with the most recent file date into a csv file-like object
+
+    To use the functionality, provide a file handler (with open() as
+    csvfile: ...)
+
+    :param csvfile: an open file handle (or file-like object)
+    :param most_recent_files: dict object with the key values according
+    to the ccrrr format and values a datetime-object
+    """
+
+    fieldnames = ['countryradar', 'datetime']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for country_radar, last_date in sorted(most_recent_file.items()):
+        writer.writerow({'countryradar': country_radar,
+                         'datetime': last_date.strftime("%Y-%m-%d %H:%M")})                         
