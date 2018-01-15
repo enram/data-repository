@@ -62,6 +62,7 @@ docs/_build/
 # hdf5 testing
 hdf5_handling/h5_data/
 hdf5_handling/temp_*
+example_data/
 
 # credentials
 creds*
