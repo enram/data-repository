@@ -124,9 +124,9 @@ def most_recent_to_csv(csvfile, most_recent_file):
     to the ccrrr format and values a datetime-object
     """
 
-    fieldnames = ['countryradar', 'datetime']
+    fieldnames = ['countryradar', 'datetime_latest_data']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
     for country_radar, last_date in sorted(most_recent_file.items()):
         writer.writerow({'countryradar': country_radar,
-                         'datetime': last_date.strftime("%Y-%m-%d %H:%M")})                         
+                         'datetime_latest_data': last_date.strftime("%Y-%m-%d %H:%M")})                         
