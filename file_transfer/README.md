@@ -140,3 +140,9 @@ The following setup is required on the Amazon EC2 Ubuntu machine to deploy the d
 **Remark:** In case of trouble, first check any error messages in the `cronlog_enram` file or check the system logs in the `/var/log` folder.
 
 **Remark:** The Amazon EC2 instance is merely an Ubuntu Machine in the AWS cloud. It is therefore possible to replicate this setup on any other server, as long as it is configured properly, especially the access rights to the Amazon S3 bucket.
+
+Since the current implementation is still DEV, an additional backup archive in DEV has been created which can be used to provide a storage when experimenting. Syncing both is most easy done with the AWS CLI:
+
+```
+aws s3 sync s3://lw-enram s3://lw-enram-archive --exclude *.tmp --profile lw-enram
+```
