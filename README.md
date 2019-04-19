@@ -29,7 +29,7 @@ The repository also provides a calendar heatmap to quickly visualize data covera
 
 ### Data access via R
 
-vp files can be downloaded programmatically with the R package [bioRad](https://github.com/adokter/bioRad). [This vignette](https://github.com/adokter/bioRad/blob/master/vignettes/intro_vp.Rmd) explains how to do so.
+vp files can be downloaded programmatically with the R package [bioRad](https://github.com/adokter/bioRad). [This function reference](http://adokter.github.io/bioRad/reference/download_vpfiles.html) explains how to do so.
 
 ### File transfer to the data repository
 
