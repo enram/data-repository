@@ -32,7 +32,7 @@ class LocalConnector(Connector):
 
     def download_file(self, file):
         """Not relevant for this connector"""
-        return NotImplemented
+        raise NotImplemented
 
     def list_files(self, path=None, name_match="_vp_", fullpaths=False):
         """list the files within a given subfolder or relative path
