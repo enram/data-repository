@@ -146,3 +146,5 @@ Since the current implementation is still DEV, an additional backup archive in D
 ```
 aws s3 sync s3://lw-enram s3://lw-enram-archive --exclude *.tmp --profile lw-enram
 ```
+
+**Remark:** This EC2 instance has a tendency to run out of inodes because automatic updates leaves a tons of installed kernels, along their full source trees. Background and a manual fix are available in [#58](/../../issues/58), a CloudWatch alarm has also been configured so we are informed by mail when the situation happens again.
