@@ -72,3 +72,5 @@ creds*
 
 # markdown
 *.html
+
+transfer_2022/config.ini
