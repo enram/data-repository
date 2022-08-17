@@ -1,4 +1,4 @@
-from .constants import CONFIG_FILE
+from constants import CONFIG_FILE
 
 # Simple Python script that:
 # - Connects via SFTP to the BALTRAD server
