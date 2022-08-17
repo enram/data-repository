@@ -6,8 +6,8 @@ from pathlib import PurePath
 
 import boto3
 
-from transfer_2022.constants import CONFIG_FILE
-from transfer_2022.s3_list_helper import s3list
+from constants import CONFIG_FILE
+from s3_list_helper import s3list
 
 
 def main():
