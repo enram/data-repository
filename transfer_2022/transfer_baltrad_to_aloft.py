@@ -37,7 +37,7 @@ def extract_metadata_from_filename(filename: str) -> (str, str, str, str):
 
 
 def main():
-    # 1. Read configuration from file
+    print("1. Read configuration from file")
     config = ConfigParser()
     config.read(CONFIG_FILE)
     baltrad_server_host = config.get("baltrad_server", "host")
@@ -48,7 +48,7 @@ def main():
 
     destination_bucket = config.get("destination_bucket", "name")
 
-    # 2. Establish SFTP connection
+    print("2. Establish SFTP connection")
     paramiko.util.log_to_file("paramiko.log")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(
@@ -63,11 +63,11 @@ def main():
     sftp = ssh.open_sftp()
     sftp.chdir(baltrad_server_datadir)
 
-    # 3. Initialize S3/Boto3 client
+    print("3. Initialize S3/Boto3 client")
     session = boto3.Session(profile_name="prod")
     s3_client = session.client("s3")
 
-    # Initialization complete, we can loop on files on the SFTP server
+    print("Initialization complete, we can loop on files on the SFTP server")
     for entry in sftp.listdir_iter():
         if "_vp_" in entry.filename:  # PVOLs and other files are ignored
             print(f"{entry.filename} is a VP file, we need to consider it... ", end="")
@@ -93,6 +93,7 @@ def main():
                 print(
                     f"{destination_key} already exists at {destination_bucket}, we skip it"
                 )
+    print("ALl done!")
 
 
 if __name__ == "__main__":
