@@ -1,3 +1,5 @@
+from transfer_2022.constants import CONFIG_FILE
+
 # Simple Python script that:
 # - Connects via SFTP to the BALTRAD server
 # - For each VP file (pvol gets ignored), download the file from the server and upload it to the "aloft" S3 bucket
@@ -37,7 +39,7 @@ def extract_metadata_from_filename(filename: str) -> (str, str, str, str):
 def main():
     # 1. Read configuration from file
     config = ConfigParser()
-    config.read("config.ini")
+    config.read(CONFIG_FILE)
     baltrad_server_host = config.get("baltrad_server", "host")
     baltrad_server_port = config.getint("baltrad_server", "port")
     baltrad_server_username = config.get("baltrad_server", "username")
