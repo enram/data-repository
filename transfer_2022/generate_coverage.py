@@ -26,10 +26,11 @@ def main():
     counter = defaultdict(int)
 
     print("Looping over files to count")
-    for e in s3list(bucket, "", recursive=True, list_dirs=True, list_objs=True):
+    for i, e in enumerate(s3list(bucket, "", recursive=True, list_dirs=True, list_objs=True)):
         dir = PurePath(e.key).parent
         counter[str(dir)] += 1
-        print(".", end="")
+        if i % 10000 == 0:
+            print(".", end="")
 
 
     print("Done, will now generate coverage.csv")
