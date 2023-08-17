@@ -1,6 +1,4 @@
-# Data repository
-
-## Report data quality issues
+# Report data quality issues
 
 This repository is used to [report issues/ask questions](https://github.com/enram/data-repository/issues) regarding:
 - **Vertical profile data** derived from European weather radars, made available at <https://aloftdata.eu/browse/>
